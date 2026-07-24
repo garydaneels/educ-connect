@@ -32,6 +32,19 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   });
 
   if (data.newCode) {
+    // Validate password complexity (same as user registration)
+    if (data.newCode.length < 8) {
+      return NextResponse.json({ error: "Mot de passe trop court (8 caractères min.)" }, { status: 400 });
+    }
+    if (!/[A-Z]/.test(data.newCode)) {
+      return NextResponse.json({ error: "Le mot de passe doit contenir au moins une majuscule" }, { status: 400 });
+    }
+    if (!/[a-z]/.test(data.newCode)) {
+      return NextResponse.json({ error: "Le mot de passe doit contenir au moins une minuscule" }, { status: 400 });
+    }
+    if (!/[0-9]/.test(data.newCode)) {
+      return NextResponse.json({ error: "Le mot de passe doit contenir au least un chiffre" }, { status: 400 });
+    }
     const hashed = await bcrypt.hash(data.newCode, 10);
     await prisma.user.update({ where: { id: institution.userId }, data: { password: hashed } });
   }

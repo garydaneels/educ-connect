@@ -16,6 +16,26 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Champs obligatoires manquants" }, { status: 400 });
   }
 
+  // Validate email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(loginEmail)) {
+    return NextResponse.json({ error: "Email de connexion invalide" }, { status: 400 });
+  }
+
+  // Validate password complexity (same as user registration)
+  if (code.length < 8) {
+    return NextResponse.json({ error: "Mot de passe trop court (8 caractères min.)" }, { status: 400 });
+  }
+  if (!/[A-Z]/.test(code)) {
+    return NextResponse.json({ error: "Le mot de passe doit contenir au moins une majuscule" }, { status: 400 });
+  }
+  if (!/[a-z]/.test(code)) {
+    return NextResponse.json({ error: "Le mot de passe doit contenir au moins une minuscule" }, { status: 400 });
+  }
+  if (!/[0-9]/.test(code)) {
+    return NextResponse.json({ error: "Le mot de passe doit contenir au moins un chiffre" }, { status: 400 });
+  }
+
   const existing = await prisma.user.findUnique({ where: { email: loginEmail } });
   if (existing) return NextResponse.json({ error: "Cet email de connexion est déjà utilisé" }, { status: 400 });
 

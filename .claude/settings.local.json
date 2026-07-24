@@ -136,7 +136,8 @@
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
       "Bash(openssl rand *)",
-      "Bash(git commit -m 'Add detailed roadmap of remaining security work *)"
+      "Bash(git commit -m 'Add detailed roadmap of remaining security work *)",
+      "Bash(xargs -0 grep -l \"POST\\\\|PATCH\")"
     ]
   }
 }
