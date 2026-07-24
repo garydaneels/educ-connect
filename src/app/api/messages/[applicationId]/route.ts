@@ -40,8 +40,32 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ app
   const user = session.user as { id: string; role: string };
   const { content, type, proposedDate, proposedNote } = await req.json();
 
-  if (!content || content.length > 5000) {
+  // Validate message content
+  if (!content || content.trim().length === 0 || content.length > 5000) {
     return NextResponse.json({ error: "Message doit faire entre 1 et 5000 caractères" }, { status: 400 });
+  }
+
+  // Validate message type
+  const validTypes = ["TEXT", "APPOINTMENT", "APPOINTMENT_PROPOSAL"];
+  if (type && !validTypes.includes(type)) {
+    return NextResponse.json({ error: "Type de message invalide" }, { status: 400 });
+  }
+
+  // Validate proposed date if provided
+  if (proposedDate) {
+    const dateObj = new Date(proposedDate);
+    if (isNaN(dateObj.getTime())) {
+      return NextResponse.json({ error: "Date invalide" }, { status: 400 });
+    }
+    // Ensure date is in the future
+    if (dateObj < new Date()) {
+      return NextResponse.json({ error: "La date doit être dans le futur" }, { status: 400 });
+    }
+  }
+
+  // Validate proposed note
+  if (proposedNote && proposedNote.length > 500) {
+    return NextResponse.json({ error: "La note est trop longue (max 500 caractères)" }, { status: 400 });
   }
 
   const application = await prisma.application.findUnique({
