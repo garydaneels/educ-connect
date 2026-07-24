@@ -39,7 +39,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(addonRequest);
   } catch (e) {
-    console.error("Error creating addon request:", e);
     const message = e instanceof Error ? e.message : "Erreur inconnue";
     return NextResponse.json({ error: message }, { status: 500 });
   }

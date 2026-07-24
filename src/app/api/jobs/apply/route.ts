@@ -6,39 +6,60 @@ import { prisma } from "@/lib/prisma";
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    const body = await req.json();
-    console.log("[jobs/apply POST] Body reçu:", body);
 
+    // Authentification requise pour les candidatures
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: "Authentification requise pour postuler" },
+        { status: 401 }
+      );
+    }
+
+    const body = await req.json();
     const { jobOfferId, name, email, phone, message, cvPath } = body;
 
+    // Validation des champs obligatoires
     if (!jobOfferId || !name?.trim() || !email?.trim()) {
-      console.log("[jobs/apply POST] Champs manquants:", { jobOfferId, name, email });
       return NextResponse.json(
         { error: "Job ID, name et email requis" },
         { status: 400 }
       );
     }
 
+    // Validation des longueurs
+    if (name.length > 100 || email.length > 255 || (message && message.length > 1000)) {
+      return NextResponse.json(
+        { error: "Contenu trop long" },
+        { status: 400 }
+      );
+    }
+
+    // Validation email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json(
+        { error: "Email invalide" },
+        { status: 400 }
+      );
+    }
+
     // Vérifier que l'offre existe
-    console.log("[jobs/apply POST] Recherche offre:", jobOfferId);
     const job = await prisma.jobOffer.findUnique({
       where: { id: jobOfferId },
     });
 
     if (!job) {
-      console.log("[jobs/apply POST] Offre non trouvée:", jobOfferId);
       return NextResponse.json(
         { error: "Offre d'emploi introuvable" },
         { status: 404 }
       );
     }
 
-    // Créer la candidature
-    console.log("[jobs/apply POST] Création candidature pour offre:", jobOfferId);
+    // Créer la candidature - userId est obligatoire
     const application = await prisma.jobApplication.create({
       data: {
         jobOfferId,
-        userId: session?.user?.id || null,
+        userId: session.user.id,
         name: name.trim(),
         email: email.trim(),
         phone: phone?.trim() || null,
@@ -48,11 +69,9 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    console.log("[jobs/apply POST] Candidature créée:", application.id);
     return NextResponse.json(application, { status: 201 });
   } catch (e) {
     const msg = e instanceof Error ? e.message : "Erreur inconnue";
-    console.error("[jobs/apply POST] Erreur:", msg, e);
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

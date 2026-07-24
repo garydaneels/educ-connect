@@ -11,15 +11,12 @@ export async function GET(req: NextRequest) {
     const session = await getServerSession(authOptions);
     if (session?.user) {
       userId = (session.user as { id: string }).id;
-      console.log("DEBUG: User ID from session:", userId);
     } else {
       // Fallback: get from header if session not found
       userId = req.headers.get("X-User-ID") || undefined;
-      console.log("DEBUG: User ID from header:", userId);
     }
 
     if (!userId) {
-      console.error("DEBUG: No user ID found");
       return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
     }
 
@@ -28,10 +25,8 @@ export async function GET(req: NextRequest) {
       include: { slots: { orderBy: { startDate: "asc" } }, subscription: true },
     });
 
-    console.log("DEBUG: Institution found:", institution ? "yes" : "no");
     return NextResponse.json(institution);
   } catch (e) {
-    console.error("DEBUG: Error in /api/institutions/mine:", e);
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }

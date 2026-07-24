@@ -28,7 +28,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(jobs);
   } catch (e) {
     const msg = e instanceof Error ? e.message : "Erreur inconnue";
-    console.error("[institution/jobs GET] Erreur:", msg);
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

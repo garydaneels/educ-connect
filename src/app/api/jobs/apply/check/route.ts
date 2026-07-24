@@ -32,7 +32,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ applied: !!existing });
   } catch (e) {
     const msg = e instanceof Error ? e.message : "Erreur inconnue";
-    console.error("[jobs/apply/check GET] Erreur:", msg);
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

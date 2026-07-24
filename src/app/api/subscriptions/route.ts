@@ -100,7 +100,7 @@ export async function POST(req: NextRequest) {
       ).catch(() => {});
     }
   } catch (e) {
-    console.error("Erreur lors de l'envoi des emails:", e);
+    // Email sending errors are not critical
   }
 
   return NextResponse.json(sub);

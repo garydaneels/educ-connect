@@ -35,6 +35,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Champs manquants" }, { status: 400 });
   }
 
+  // Valider format email
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return NextResponse.json({ error: "Email invalide" }, { status: 400 });
+  }
+
+  // Valider longueurs
+  if (name.length > 100 || email.length > 255 || (subject && subject.length > 255) || message.length > 5000) {
+    return NextResponse.json({ error: "Contenu trop long" }, { status: 400 });
+  }
+
   const escapedName = escapeHtml(name);
   const escapedEmail = escapeHtml(email);
   const escapedSubject = escapeHtml(subject || "");
