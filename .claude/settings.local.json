@@ -135,7 +135,8 @@
       "Skill(run:*)",
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
-      "Bash(openssl rand *)"
+      "Bash(openssl rand *)",
+      "Bash(git commit -m 'Add detailed roadmap of remaining security work *)"
     ]
   }
 }
