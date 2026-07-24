@@ -130,7 +130,11 @@
       "PowerShell(New-Item -ItemType Directory -Path \"C:\\\\projet\\\\src\\\\app\\\\api\\\\institution\" -Force)",
       "PowerShell(taskkill /PID 22536 /F)",
       "PowerShell(taskkill /F /IM node.exe 2>$null)",
-      "PowerShell(taskkill /PID 18776 /F)"
+      "PowerShell(taskkill /PID 18776 /F)",
+      "Skill(run)",
+      "Skill(run:*)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }
