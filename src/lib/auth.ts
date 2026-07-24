@@ -17,23 +17,33 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Mot de passe", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
+        try {
+          if (!credentials?.email || !credentials?.password) {
+            console.log("Missing credentials");
+            return null;
+          }
 
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
-        });
+          const user = await prisma.user.findUnique({
+            where: { email: credentials.email },
+          });
 
-        if (!user) return null;
+          if (!user) {
+            console.log("User not found:", credentials.email);
+            return null;
+          }
 
-        const valid = await bcrypt.compare(credentials.password, user.password);
-        if (!valid) return null;
+          const valid = await bcrypt.compare(credentials.password, user.password);
+          if (!valid) {
+            console.log("Invalid password for user:", credentials.email);
+            return null;
+          }
 
-        // Allow login even if email not verified (can be enforced via separate verification step)
-        // if (!user.emailVerified) {
-        //   throw new Error("EMAIL_NOT_VERIFIED");
-        // }
-
-        return { id: user.id, name: user.name, email: user.email, role: user.role };
+          console.log("Auth successful for:", credentials.email, "role:", user.role);
+          return { id: user.id, name: user.name, email: user.email, role: user.role };
+        } catch (error) {
+          console.error("Auth error:", error);
+          return null;
+        }
       },
     }),
   ],
