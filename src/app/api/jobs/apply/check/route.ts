@@ -1,0 +1,38 @@
+import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+
+export async function GET(req: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ applied: false });
+    }
+
+    const { searchParams } = new URL(req.url);
+    const jobOfferId = searchParams.get("jobOfferId");
+
+    if (!jobOfferId) {
+      return NextResponse.json(
+        { error: "jobOfferId requis" },
+        { status: 400 }
+      );
+    }
+
+    const existing = await prisma.jobApplication.findUnique({
+      where: {
+        jobOfferId_userId: {
+          jobOfferId,
+          userId: session.user.id,
+        },
+      },
+    });
+
+    return NextResponse.json({ applied: !!existing });
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : "Erreur inconnue";
+    console.error("[jobs/apply/check GET] Erreur:", msg);
+    return NextResponse.json({ error: msg }, { status: 500 });
+  }
+}

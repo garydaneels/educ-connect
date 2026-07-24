@@ -1,0 +1,398 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String        @id @default(cuid())
+  name         String?
+  email        String        @unique
+  password     String
+  role         String        @default("STUDENT")
+  createdAt    DateTime      @default(now())
+
+  emailVerified         Boolean  @default(true)
+  emailVerificationToken String?
+
+  resetToken       String?
+  resetTokenExpiry DateTime?
+
+  emailInstitutionInterest Boolean @default(true)
+  emailApplicationStatus   Boolean @default(true)
+  emailNewMessage          Boolean @default(true)
+  emailScheduleUpdate      Boolean @default(true)
+  emailNewApplication      Boolean @default(true)
+  emailUnavailability      Boolean @default(true)
+
+  institution         Institution?
+  studentProfile      StudentProfile?
+  professionalProfile ProfessionalProfile?
+
+  @@index([resetToken])
+  applications   Application[]
+  messages       Message[]
+  notifications  Notification[]
+  institutionInterests InstitutionInterest[]
+  jobApplications JobApplication[]
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  title     String
+  body      String?
+  link      String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([userId, read])
+}
+
+model StudentProfile {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id])
+
+  presentation   String?
+  cvPath         String?
+  letterPath     String?
+  experiences    String   @default("[]")
+  previousStages String   @default("[]")
+
+  stageStartDate DateTime?
+  stageEndDate   DateTime?
+  stageMaxHours  Int?
+  conventionPath String?
+
+  studyYear       String?
+  schoolName      String?
+  sectorPreference String?
+
+  applicationSlots Int @default(5)
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([studyYear, sectorPreference])
+}
+
+model ProfessionalProfile {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id])
+
+  presentation   String?
+  cvPath         String?
+
+  experiences    String   @default("[]")
+  qualifications String   @default("[]")
+
+  sectorPreference String?
+  contractType   String?
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([sectorPreference, contractType])
+}
+
+model InstitutionInterest {
+  id            String      @id @default(cuid())
+  institutionId String
+  institution   Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  studentId     String
+  student       User        @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+
+  @@unique([institutionId, studentId])
+}
+
+model Institution {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+
+  name        String
+  description String?
+  address     String
+  commune     String
+  phone       String?
+  email       String?
+  website     String?
+
+  publicTypes  String
+  hebergements String
+  organismes   String
+
+  mission           String?
+  stageDescription  String?
+  supervisorName    String?
+  supervisorTitle   String?
+  teamSize          String?
+  founded           String?
+
+  status      String   @default("PENDING")
+  views       Int      @default(0)
+  boosted     Boolean  @default(false)
+  boostEndDate DateTime?
+  lat         Float?
+  lng         Float?
+
+  slots        InternshipSlot[]
+  applications Application[]
+  subscription Subscription?
+  jobOffers    JobOffer[]
+  interests    InstitutionInterest[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([commune])
+  @@index([status])
+}
+
+model Subscription {
+  id            String      @id @default(cuid())
+  institutionId String      @unique
+  institution   Institution @relation(fields: [institutionId], references: [id])
+
+  plan          String      // MONTHLY | QUARTERLY
+  status        String      @default("PENDING_PAYMENT") // PENDING_PAYMENT | ACTIVE | EXPIRED
+  jobsAddonPacks Int       @default(0)
+  jobOffersAddonPacks Int   @default(0)
+  startDate     DateTime?
+  endDate       DateTime?
+  price         Float?
+  paymentReference String  @unique // ex: EDUC-A2K9B
+  exemptFromVAT Boolean     @default(false) // Exonéré de TVA
+
+  addonRequests AddonPackRequest[] @relation("SubscriptionAddons")
+  payments      Payment[]
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model AddonPackRequest {
+  id            String      @id @default(cuid())
+  subscriptionId String
+  subscription  Subscription @relation("SubscriptionAddons", fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  jobsAddonPacks Int       @default(0)
+  jobOffersAddonPacks Int   @default(0)
+  status        String      @default("PENDING") // PENDING | APPROVED | REJECTED
+  paymentReference String?
+  exemptFromVAT Boolean     @default(false)
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([subscriptionId, status])
+}
+
+model InternshipSlot {
+  id              String      @id @default(cuid())
+  institutionId   String
+  institution     Institution @relation(fields: [institutionId], references: [id])
+
+  startDate       DateTime?
+  endDate         DateTime?
+  totalPlaces     Int
+  availablePlaces Int
+  description     String?
+
+  applications    Application[]
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([institutionId])
+}
+
+model Application {
+  id              String         @id @default(cuid())
+  studentId       String
+  student         User           @relation(fields: [studentId], references: [id])
+  institutionId   String
+  institution     Institution    @relation(fields: [institutionId], references: [id])
+  slotId          String?
+  slot            InternshipSlot? @relation(fields: [slotId], references: [id])
+
+  status          String         @default("PENDING")
+  message         String?
+  cvPath          String?
+  letterPath      String?
+  appointmentDate DateTime?
+  appointmentNote String?
+  stageFoundDate  DateTime?
+
+  stageStatus     String?
+  weeklySchedule  String         @default("[]")
+
+  messages        Message[]
+  stageDocuments  StageDocument[]
+  unavailabilities Unavailability[]
+  scheduleRequests ScheduleRequest[]
+  evaluations     StageEvaluation[]
+
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index([studentId])
+  @@index([institutionId])
+  @@index([slotId])
+  @@index([studentId, status])
+  @@index([institutionId, status])
+}
+
+model StageDocument {
+  id            String      @id @default(cuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  name          String
+  path          String
+  uploadedById  String
+  createdAt     DateTime    @default(now())
+}
+
+model Unavailability {
+  id            String      @id @default(cuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  date          String
+  reason        String?
+  status        String      @default("PENDING")
+  requestedById String
+  createdAt     DateTime    @default(now())
+}
+
+model ScheduleRequest {
+  id            String      @id @default(cuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  description   String
+  status        String      @default("PENDING")
+  requestedById String
+  responseNote  String?
+  createdAt     DateTime    @default(now())
+}
+
+model JobOffer {
+  id            String           @id @default(cuid())
+  institutionId String
+  institution   Institution      @relation(fields: [institutionId], references: [id])
+
+  title         String
+  description   String?
+  schedule      String?
+  salary        String?
+  contractType  String           @default("ETUDIANT")
+  prerequisites String?
+  status        String           @default("ACTIVE")
+
+  applications  JobApplication[]
+
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@index([institutionId, status])
+}
+
+model JobApplication {
+  id          String    @id @default(cuid())
+  jobOfferId  String
+  jobOffer    JobOffer  @relation(fields: [jobOfferId], references: [id], onDelete: Cascade)
+  userId      String?
+  user        User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name        String
+  email       String
+  phone       String?
+  message     String?
+  cvPath      String?
+  status      String    @default("PENDING")
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([jobOfferId])
+  @@index([userId])
+  @@unique([jobOfferId, userId])
+}
+
+model StageEvaluation {
+  id            String      @id @default(cuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  authorRole    String      // STUDENT | INSTITUTION
+
+  ratingGlobal      Int     // 1-5
+  ratingIntegration Int?    // intégration dans l'équipe
+  ratingTasks       Int?    // qualité des missions
+  ratingSupervision Int?    // encadrement (étudiant évalue institution)
+  ratingAutonomy    Int?    // autonomie (institution évalue étudiant)
+
+  comment       String?
+  createdAt     DateTime    @default(now())
+
+  @@unique([applicationId, authorRole])
+}
+
+model ConfigItem {
+  id        String   @id @default(cuid())
+  category  String
+  key       String
+  label     String
+  emoji     String?
+  parentKey String?
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@unique([category, key])
+}
+
+model Message {
+  id            String      @id @default(cuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  senderId      String
+  sender        User        @relation(fields: [senderId], references: [id])
+
+  content       String
+  type          String      @default("TEXT")
+  proposedDate  String?
+  proposedNote  String?
+
+  createdAt     DateTime    @default(now())
+
+  @@index([applicationId])
+  @@index([senderId])
+}
+
+model Payment {
+  id                String      @id @default(cuid())
+  subscriptionId    String
+  subscription      Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  type              String      // "SUBSCRIPTION" | "ADDON_PACK"
+  amount            Float       // Montant sans TVA
+  vat               Float       @default(0)
+  totalAmount       Float       // Montant avec TVA
+  paymentReference  String?     // Référence bancaire
+  status            String      @default("PENDING") // PENDING | CONFIRMED | REJECTED
+
+  jobsAddonPacks    Int         @default(0)
+  jobOffersAddonPacks Int       @default(0)
+
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  @@index([subscriptionId, status])
+}
