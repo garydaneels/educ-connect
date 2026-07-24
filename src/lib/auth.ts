@@ -28,9 +28,10 @@ export const authOptions: NextAuthOptions = {
         const valid = await bcrypt.compare(credentials.password, user.password);
         if (!valid) return null;
 
-        if (!user.emailVerified) {
-          throw new Error("EMAIL_NOT_VERIFIED");
-        }
+        // Allow login even if email not verified (can be enforced via separate verification step)
+        // if (!user.emailVerified) {
+        //   throw new Error("EMAIL_NOT_VERIFIED");
+        // }
 
         return { id: user.id, name: user.name, email: user.email, role: user.role };
       },
