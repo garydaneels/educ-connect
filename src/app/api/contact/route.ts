@@ -2,6 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { rateLimit, getIp } from "@/lib/rate-limit";
 
+function escapeHtml(text: string): string {
+  const map: { [key: string]: string } = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;",
+  };
+  return text.replace(/[&<>"']/g, (char) => map[char]);
+}
+
 const transport = nodemailer.createTransport({
   host: process.env.EMAIL_HOST || "smtp.gmail.com",
   port: Number(process.env.EMAIL_PORT) || 587,
@@ -24,6 +35,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Champs manquants" }, { status: 400 });
   }
 
+  const escapedName = escapeHtml(name);
+  const escapedEmail = escapeHtml(email);
+  const escapedSubject = escapeHtml(subject || "");
+  const escapedMessage = escapeHtml(message);
+
   const html = `<!DOCTYPE html><html lang="fr"><body style="font-family:sans-serif;background:#f9fafb;padding:32px 16px">
 <div style="max-width:560px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)">
   <div style="background:linear-gradient(135deg,#fff7ed,#f0f9ff);padding:24px 32px;border-bottom:1px solid #f0f0f0">
@@ -33,12 +49,12 @@ export async function POST(req: NextRequest) {
     <p style="margin:0 0 6px;font-size:18px;font-weight:700;color:#1c1917">📩 Nouveau message via la page contact</p>
     <p style="margin:0 0 20px;color:#a8a29e;font-size:13px">Reçu depuis educonnect.be/contact</p>
     <table style="font-size:14px;color:#44403c;line-height:2;background:#f5f5f4;border-radius:12px;padding:16px 20px;width:100%;border-spacing:0">
-      <tr><td style="font-weight:700;padding-right:12px;white-space:nowrap">Nom :</td><td>${name}</td></tr>
-      <tr><td style="font-weight:700;padding-right:12px">Email :</td><td><a href="mailto:${email}" style="color:#0369a1">${email}</a></td></tr>
-      <tr><td style="font-weight:700;padding-right:12px">Sujet :</td><td>${subject || "—"}</td></tr>
+      <tr><td style="font-weight:700;padding-right:12px;white-space:nowrap">Nom :</td><td>${escapedName}</td></tr>
+      <tr><td style="font-weight:700;padding-right:12px">Email :</td><td><a href="mailto:${escapedEmail}" style="color:#0369a1">${escapedEmail}</a></td></tr>
+      <tr><td style="font-weight:700;padding-right:12px">Sujet :</td><td>${escapedSubject || "—"}</td></tr>
     </table>
-    <div style="margin:20px 0;background:#fff;border:1px solid #e7e5e4;border-radius:12px;padding:16px 20px;font-size:14px;color:#44403c;line-height:1.7;white-space:pre-wrap">${message}</div>
-    <a href="mailto:${email}?subject=Re: ${encodeURIComponent(subject || "Votre message Educ-Connect")}" style="display:inline-block;background:#0369a1;color:#fff;text-decoration:none;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600">Répondre à ${name} →</a>
+    <div style="margin:20px 0;background:#fff;border:1px solid #e7e5e4;border-radius:12px;padding:16px 20px;font-size:14px;color:#44403c;line-height:1.7;white-space:pre-wrap">${escapedMessage}</div>
+    <a href="mailto:${escapedEmail}?subject=Re: ${encodeURIComponent(escapedSubject || "Votre message Educ-Connect")}" style="display:inline-block;background:#0369a1;color:#fff;text-decoration:none;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600">Répondre à ${escapedName} →</a>
   </div>
   <div style="padding:16px 32px;border-top:1px solid #f0f0f0;background:#fafafa">
     <p style="margin:0;font-size:12px;color:#a8a29e">© 2026 Educ-Connect — ${BASE}</p>
