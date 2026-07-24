@@ -15,9 +15,10 @@ export async function POST(req: NextRequest) {
     }
 
     const session = await getServerSession(authOptions);
+    const user = session?.user as { id?: string } | undefined;
 
     // Authentification requise pour les candidatures
-    if (!session?.user?.id) {
+    if (!user?.id) {
       return NextResponse.json(
         { error: "Authentification requise pour postuler" },
         { status: 401 }
@@ -68,7 +69,7 @@ export async function POST(req: NextRequest) {
     const application = await prisma.jobApplication.create({
       data: {
         jobOfferId,
-        userId: session.user.id,
+        userId: user.id,
         name: name.trim(),
         email: email.trim(),
         phone: phone?.trim() || null,

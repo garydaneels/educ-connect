@@ -447,8 +447,8 @@ function MembershipContent() {
                     const colorConfig = {
                       ANNUAL: { gradient: "from-sky-50 to-white", border: "border-sky-300", accent: "text-sky-700", accentBg: "bg-sky-100", buttonBg: "bg-sky-600", buttonHover: "hover:bg-sky-700", badgeBg: "bg-sky-500" },
                       SCHOOL: { gradient: "from-emerald-50 to-white", border: "border-emerald-300", accent: "text-emerald-700", accentBg: "bg-emerald-100", buttonBg: "bg-emerald-600", buttonHover: "hover:bg-emerald-700", badgeBg: "bg-emerald-500" },
-                    };
-                    const config = colorConfig[plan.key] || colorConfig.ANNUAL;
+                    } as const;
+                    const config = colorConfig[plan.key as keyof typeof colorConfig] || colorConfig.ANNUAL;
                     const active = selectedPlan === plan.key;
                     return (
                       <button key={plan.key} onClick={() => { setSelectedPlan(plan.key); setJobsAddonPacks(0); }}

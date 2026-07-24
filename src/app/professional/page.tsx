@@ -11,6 +11,7 @@ interface Profile {
   qualifications: string;
   sectorPreference: string | null;
   contractType: string | null;
+  cvPath?: string | null;
 }
 
 export default function ProfessionalDashboardPage() {

@@ -6,7 +6,8 @@ import { prisma } from "@/lib/prisma";
 export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    const user = session?.user as { id?: string } | undefined;
+    if (!user?.id) {
       return NextResponse.json({ applied: false });
     }
 
@@ -24,7 +25,7 @@ export async function GET(req: NextRequest) {
       where: {
         jobOfferId_userId: {
           jobOfferId,
-          userId: session.user.id,
+          userId: user.id,
         },
       },
     });

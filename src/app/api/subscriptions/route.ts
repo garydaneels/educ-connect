@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Générer une communication unique (vérifier les collisions)
-  let paymentRef = existing?.paymentReference;
+  let paymentRef: string = existing?.paymentReference || "";
   if (!paymentRef) {
     let isUnique = false;
     while (!isUnique) {

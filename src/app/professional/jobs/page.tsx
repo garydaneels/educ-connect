@@ -111,7 +111,8 @@ export default function ProfessionalJobsPage() {
   }, [buildParams]);
 
   const checkAppliedJobs = useCallback(async (jobIds: string[]) => {
-    if (!session?.user?.id) return;
+    const user = session?.user as { id?: string } | undefined;
+    if (!user?.id) return;
     const applied = new Set<string>();
     for (const jobId of jobIds) {
       try {
@@ -123,7 +124,7 @@ export default function ProfessionalJobsPage() {
       }
     }
     setAppliedJobs(applied);
-  }, [session?.user?.id]);
+  }, [session?.user]);
 
   useEffect(() => { search(1); }, [search]);
 
