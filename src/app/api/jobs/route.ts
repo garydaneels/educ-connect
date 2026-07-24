@@ -11,6 +11,26 @@ export async function POST(req: NextRequest) {
   const { title, description, schedule, salary, contractType } = await req.json();
   if (!title?.trim()) return NextResponse.json({ error: "Titre requis" }, { status: 400 });
 
+  // Validate input lengths
+  if (title.trim().length > 500) {
+    return NextResponse.json({ error: "Titre trop long (max 500 caractères)" }, { status: 400 });
+  }
+  if (description && description.trim().length > 5000) {
+    return NextResponse.json({ error: "Description trop longue (max 5000 caractères)" }, { status: 400 });
+  }
+  if (schedule && schedule.trim().length > 500) {
+    return NextResponse.json({ error: "Horaires trop longs (max 500 caractères)" }, { status: 400 });
+  }
+  if (salary && salary.trim().length > 200) {
+    return NextResponse.json({ error: "Salaire trop long (max 200 caractères)" }, { status: 400 });
+  }
+
+  // Validate contractType
+  const validContractTypes = ["ETUDIANT", "CDI", "CDD", "STAGE"];
+  if (contractType && !validContractTypes.includes(contractType)) {
+    return NextResponse.json({ error: "Type de contrat invalide" }, { status: 400 });
+  }
+
   const institution = await prisma.institution.findUnique({ where: { userId: user.id }, include: { subscription: true } });
   if (!institution) return NextResponse.json({ error: "Institution introuvable" }, { status: 404 });
   const sub = institution.subscription;

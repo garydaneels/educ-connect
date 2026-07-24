@@ -36,6 +36,12 @@ export async function PATCH(req: NextRequest) {
 
     if (!id || !status) return NextResponse.json({ error: "ID and status required" }, { status: 400 });
 
+    // Validate status
+    const validStatuses = ["PENDING", "APPROVED", "REJECTED"];
+    if (!validStatuses.includes(status)) {
+      return NextResponse.json({ error: "Statut invalide" }, { status: 400 });
+    }
+
     // Récupérer la demande
     const addonRequest = await prisma.addonPackRequest.findUnique({
       where: { id },

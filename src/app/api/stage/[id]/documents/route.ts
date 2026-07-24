@@ -42,6 +42,13 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     return NextResponse.json({ error: "Format non autorisé (PDF, Word, JPEG ou PNG)" }, { status: 400 });
   }
 
+  // Validate file extension to prevent double extension attacks
+  const ALLOWED_EXT = [".pdf", ".doc", ".docx", ".jpg", ".jpeg", ".png"];
+  const fileExt = ("." + (file.name.split(".").pop() || "")).toLowerCase();
+  if (!ALLOWED_EXT.includes(fileExt)) {
+    return NextResponse.json({ error: "Extension non autorisée" }, { status: 400 });
+  }
+
   const sanitizedName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
   const storagePath = `stages/${id}/documents/${Date.now()}_${sanitizedName}`;
   const publicUrl = await uploadToStorage(
