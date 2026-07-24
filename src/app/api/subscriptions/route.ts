@@ -17,6 +17,24 @@ export async function POST(req: NextRequest) {
 
   const { plan, jobsAddonPacks, jobOffersAddonPacks, exemptFromVAT } = await req.json();
 
+  // Validate plan
+  const validPlans = ["ANNUAL", "SCHOOL"];
+  if (!validPlans.includes(plan)) {
+    return NextResponse.json({ error: "Plan invalide" }, { status: 400 });
+  }
+
+  // Validate addon packs
+  if (jobsAddonPacks !== null && jobsAddonPacks !== undefined) {
+    if (typeof jobsAddonPacks !== "number" || jobsAddonPacks < 0 || jobsAddonPacks > 1000) {
+      return NextResponse.json({ error: "Nombre d'addons métiers invalide (0-1000)" }, { status: 400 });
+    }
+  }
+  if (jobOffersAddonPacks !== null && jobOffersAddonPacks !== undefined) {
+    if (typeof jobOffersAddonPacks !== "number" || jobOffersAddonPacks < 0 || jobOffersAddonPacks > 1000) {
+      return NextResponse.json({ error: "Nombre d'addons offres invalide (0-1000)" }, { status: 400 });
+    }
+  }
+
   const existing = await prisma.subscription.findUnique({ where: { institutionId: institution.id } });
   if (existing && existing.status === "ACTIVE") {
     return NextResponse.json({ error: "Abonnement déjà actif" }, { status: 400 });

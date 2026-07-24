@@ -31,40 +31,52 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
 
     // Accepter ou décliner une invitation
-    if (application.status === "INVITED") {
-      if (data.action === "accept") {
-        await prisma.application.update({ where: { id }, data: { status: "PENDING" } });
-        await prisma.message.create({
-          data: {
-            applicationId: id,
-            senderId: user.id,
-            content: "✅ J'ai accepté votre invitation et suis intéressé(e) par ce stage. Hâte d'échanger avec vous !",
-            type: "TEXT",
-          },
-        });
-        if (application.institution.email) {
-          const studentName = application.student.name || application.student.email;
-          sendInstitutionInvitationAccepted(
-            application.institution.email,
-            application.institution.name,
-            studentName,
-            `${process.env.NEXTAUTH_URL || "http://localhost:3000"}/institution/applications`,
-          ).catch(() => {});
-        }
-        return NextResponse.json({ status: "PENDING" });
+    if (data.action === "accept") {
+      // Atomic update: only if status is still "INVITED"
+      const result = await prisma.application.updateMany({
+        where: { id, status: "INVITED" },
+        data: { status: "PENDING" },
+      });
+      if (result.count === 0) {
+        return NextResponse.json({ error: "Le statut a changé. Veuillez rafraîchir." }, { status: 409 });
       }
-      if (data.action === "decline") {
-        await prisma.application.update({ where: { id }, data: { status: "REJECTED" } });
-        if (application.institution.email) {
-          const studentName = application.student.name || application.student.email;
-          sendInstitutionInvitationDeclined(
-            application.institution.email,
-            application.institution.name,
-            studentName,
-          ).catch(() => {});
-        }
-        return NextResponse.json({ status: "REJECTED" });
+      await prisma.message.create({
+        data: {
+          applicationId: id,
+          senderId: user.id,
+          content: "✅ J'ai accepté votre invitation et suis intéressé(e) par ce stage. Hâte d'échanger avec vous !",
+          type: "TEXT",
+        },
+      });
+      if (application.institution.email) {
+        const studentName = application.student.name || application.student.email;
+        sendInstitutionInvitationAccepted(
+          application.institution.email,
+          application.institution.name,
+          studentName,
+          `${process.env.NEXTAUTH_URL || "http://localhost:3000"}/institution/applications`,
+        ).catch(() => {});
       }
+      return NextResponse.json({ status: "PENDING" });
+    }
+    if (data.action === "decline") {
+      // Atomic update: only if status is still "INVITED"
+      const result = await prisma.application.updateMany({
+        where: { id, status: "INVITED" },
+        data: { status: "REJECTED" },
+      });
+      if (result.count === 0) {
+        return NextResponse.json({ error: "Le statut a changé. Veuillez rafraîchir." }, { status: 409 });
+      }
+      if (application.institution.email) {
+        const studentName = application.student.name || application.student.email;
+        sendInstitutionInvitationDeclined(
+          application.institution.email,
+          application.institution.name,
+          studentName,
+        ).catch(() => {});
+      }
+      return NextResponse.json({ status: "REJECTED" });
     }
 
     return NextResponse.json({ error: "Action non autorisée" }, { status: 403 });

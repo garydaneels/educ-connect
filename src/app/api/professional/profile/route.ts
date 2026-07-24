@@ -9,21 +9,18 @@ export async function GET() {
   const user = session.user as { id: string; role: string };
   if (user.role !== "PROFESSIONAL") return NextResponse.json({ error: "Rôle incorrect" }, { status: 403 });
 
-  let profile = await prisma.professionalProfile.findUnique({ where: { userId: user.id } });
-
-  // Créer un profil vide s'il n'existe pas
-  if (!profile) {
-    profile = await prisma.professionalProfile.create({
-      data: {
-        userId: user.id,
-        presentation: null,
-        experiences: "[]",
-        qualifications: "[]",
-        sectorPreference: null,
-        contractType: null,
-      },
-    });
-  }
+  const profile = await prisma.professionalProfile.upsert({
+    where: { userId: user.id },
+    create: {
+      userId: user.id,
+      presentation: null,
+      experiences: "[]",
+      qualifications: "[]",
+      sectorPreference: null,
+      contractType: null,
+    },
+    update: {},
+  });
 
   return NextResponse.json(profile);
 }

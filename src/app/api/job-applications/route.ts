@@ -1,11 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { rateLimit, getIp } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
+  // Rate limit: 5 applications per hour per IP
+  if (!rateLimit(getIp(req), 5, 60 * 60 * 1000)) {
+    return NextResponse.json({ error: "Trop de tentatives. Réessayez dans une heure." }, { status: 429 });
+  }
+
   const { jobOfferId, name, email, phone, message } = await req.json();
 
   if (!jobOfferId || !name?.trim() || !email?.trim()) {
     return NextResponse.json({ error: "Champs requis manquants" }, { status: 400 });
+  }
+
+  // Email format validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return NextResponse.json({ error: "Email invalide" }, { status: 400 });
+  }
+
+  // Validate input lengths
+  if (name.trim().length > 100 || email.trim().length > 255) {
+    return NextResponse.json({ error: "Champs invalides" }, { status: 400 });
+  }
+  if (message && message.trim().length > 2000) {
+    return NextResponse.json({ error: "Le message est trop long (max 2000 caractères)" }, { status: 400 });
   }
 
   const job = await prisma.jobOffer.findUnique({

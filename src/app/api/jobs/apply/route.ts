@@ -2,9 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { rateLimit, getIp } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
+    // Rate limit: 10 applications per hour per user
+    if (!rateLimit(getIp(req), 10, 60 * 60 * 1000)) {
+      return NextResponse.json(
+        { error: "Trop de candidatures. Réessayez dans une heure." },
+        { status: 429 }
+      );
+    }
+
     const session = await getServerSession(authOptions);
 
     // Authentification requise pour les candidatures

@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { sendNewMessage } from "@/lib/email";
+import { rateLimit, getIp } from "@/lib/rate-limit";
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ applicationId: string }> }) {
   const { applicationId } = await params;
@@ -33,6 +34,11 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ app
 }
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ applicationId: string }> }) {
+  // Rate limit: 20 messages per hour per user
+  if (!rateLimit(getIp(req), 20, 60 * 60 * 1000)) {
+    return NextResponse.json({ error: "Trop de messages. Réessayez dans une heure." }, { status: 429 });
+  }
+
   const { applicationId } = await params;
   const session = await getServerSession(authOptions);
   if (!session?.user) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });

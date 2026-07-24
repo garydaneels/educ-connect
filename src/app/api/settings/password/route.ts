@@ -13,8 +13,19 @@ export async function POST(req: NextRequest) {
   if (!currentPassword || !newPassword) {
     return NextResponse.json({ error: "Champs manquants" }, { status: 400 });
   }
-  if (newPassword.length < 6) {
-    return NextResponse.json({ error: "Nouveau mot de passe trop court (6 caractères min.)" }, { status: 400 });
+
+  // Password complexity requirements (consistent with registration)
+  if (newPassword.length < 8) {
+    return NextResponse.json({ error: "Nouveau mot de passe trop court (8 caractères min.)" }, { status: 400 });
+  }
+  if (!/[A-Z]/.test(newPassword)) {
+    return NextResponse.json({ error: "Le mot de passe doit contenir au moins une majuscule" }, { status: 400 });
+  }
+  if (!/[a-z]/.test(newPassword)) {
+    return NextResponse.json({ error: "Le mot de passe doit contenir au moins une minuscule" }, { status: 400 });
+  }
+  if (!/[0-9]/.test(newPassword)) {
+    return NextResponse.json({ error: "Le mot de passe doit contenir au moins un chiffre" }, { status: 400 });
   }
 
   const dbUser = await prisma.user.findUnique({ where: { id: user.id } });

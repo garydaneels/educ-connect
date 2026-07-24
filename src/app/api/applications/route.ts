@@ -138,8 +138,22 @@ export async function POST(req: NextRequest) {
       if (err) return NextResponse.json({ error: `Lettre ${err}` }, { status: 400 });
     }
 
-    let cvPath: string | null = existingCvPath || null;
-    let letterPath: string | null = existingLetterPath || null;
+    let cvPath: string | null = null;
+    let letterPath: string | null = null;
+
+    // Validate existing file paths if provided (they must belong to this application)
+    if (existingCvPath) {
+      if (!existingCvPath.includes(`applications/${application.id}/`)) {
+        return NextResponse.json({ error: "Chemin de fichier invalide" }, { status: 403 });
+      }
+      cvPath = existingCvPath;
+    }
+    if (existingLetterPath) {
+      if (!existingLetterPath.includes(`applications/${application.id}/`)) {
+        return NextResponse.json({ error: "Chemin de fichier invalide" }, { status: 403 });
+      }
+      letterPath = existingLetterPath;
+    }
 
     try {
       if (cvFile && cvFile.size > 0) {
