@@ -5,16 +5,16 @@ import { Footer } from "@/components/Footer";
 import { Logo } from "@/components/Logo";
 
 async function getStats() {
-  const [communes, secteurs, villes, publics] = await Promise.all([
-    prisma.configItem.count({ where: { category: "COMMUNE" } }),
+  const [provinces, cities, secteurs, publics] = await Promise.all([
+    prisma.province.count(),
+    prisma.city.count(),
     prisma.configItem.count({ where: { category: "SECTOR" } }),
-    prisma.configItem.count({ where: { category: "CITY" } }),
     prisma.configItem.count({ where: { category: "HEBERGEMENT" } }),
   ]);
   return {
-    communes:  communes  || COMMUNES_BRUXELLES.length,
+    villes:    provinces || 1,
+    communes:  cities    || 19,
     secteurs:  secteurs  || Object.keys(PUBLIC_TYPES).length,
-    villes:    villes    || 1,
     publics:   publics   || Object.keys(HEBERGEMENTS).length,
   };
 }
