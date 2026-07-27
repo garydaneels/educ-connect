@@ -1,9 +1,15 @@
 "use client";
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { PUBLIC_TYPES } from "@/lib/constants";
+
+interface Province {
+  id: string;
+  name: string;
+  cities: Array<{ id: string; name: string }>;
+}
 
 function RegisterForm() {
   const router = useRouter();
@@ -15,12 +21,56 @@ function RegisterForm() {
   const [institutionName, setInstitutionName] = useState("");
   const [sector, setSector] = useState("");
   const [address, setAddress] = useState("");
+  const [province, setProvince] = useState("");
   const [commune, setCommune] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const [provinces, setProvinces] = useState<Province[]>([]);
+  const [cities, setCities] = useState<Array<{ id: string; name: string }>>([]);
+  const [dynamicPublicTypes, setDynamicPublicTypes] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    Promise.all([
+      fetch("/api/admin/provinces").then(r => r.ok ? r.json() : null),
+      fetch("/api/admin/config-items").then(r => r.ok ? r.json() : null),
+    ])
+      .then(([provData, configData]) => {
+        if (provData?.provinces) {
+          setProvinces(provData.provinces);
+          if (provData.provinces.length > 0) {
+            setProvince(provData.provinces[0].id);
+            setCities(provData.provinces[0].cities);
+            if (provData.provinces[0].cities.length > 0) {
+              setCommune(provData.provinces[0].cities[0].name);
+            }
+          }
+        }
+        if (configData?.items) {
+          const pubTypes: Record<string, string> = {};
+          configData.items.forEach((item: any) => {
+            if (item.category === "SECTOR") pubTypes[item.key] = item.label;
+          });
+          if (Object.keys(pubTypes).length > 0) {
+            setDynamicPublicTypes(pubTypes);
+          }
+        }
+      })
+      .catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    if (province) {
+      const p = provinces.find(pr => pr.id === province);
+      if (p) {
+        setCities(p.cities);
+        if (p.cities.length > 0) setCommune(p.cities[0].name);
+      }
+    }
+  }, [province, provinces]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -122,7 +172,7 @@ function RegisterForm() {
                   className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-sky-300 transition bg-white"
                 >
                   <option value="">Choisissez un secteur…</option>
-                  {Object.entries(PUBLIC_TYPES).map(([k, v]) => (
+                  {Object.entries(Object.keys(dynamicPublicTypes).length > 0 ? dynamicPublicTypes : PUBLIC_TYPES).map(([k, v]) => (
                     <option key={k} value={k}>{v}</option>
                   ))}
                 </select>
@@ -130,7 +180,7 @@ function RegisterForm() {
               </div>
             )}
 
-            {/* Adresse — uniquement pour les institutions */}
+            {/* Adresse et localisation — uniquement pour les institutions */}
             {role === "INSTITUTION" && (
               <div className="grid grid-cols-1 gap-3">
                 <div>
@@ -146,14 +196,29 @@ function RegisterForm() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-stone-700 mb-1.5">
+                    Province <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    required={role === "INSTITUTION"} value={province}
+                    onChange={e => setProvince(e.target.value)}
+                    className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-sky-300 transition bg-white"
+                  >
+                    <option value="">Sélectionner une province</option>
+                    {provinces.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-stone-700 mb-1.5">
                     Commune <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="text" required={role === "INSTITUTION"} value={commune}
+                  <select
+                    required={role === "INSTITUTION"} value={commune}
                     onChange={e => setCommune(e.target.value)}
-                    className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-sky-300 transition"
-                    placeholder="Namur"
-                  />
+                    className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-sky-300 transition bg-white"
+                  >
+                    <option value="">Sélectionner une commune</option>
+                    {cities.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
+                  </select>
                 </div>
               </div>
             )}

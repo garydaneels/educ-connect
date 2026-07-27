@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
+import { DynamicSectors, DynamicCities } from "@/components/DynamicSectorsAndCities";
 
 export default function EtudiantsPage() {
   return (
@@ -90,21 +91,7 @@ export default function EtudiantsPage() {
           <div className="max-w-3xl mx-auto">
             <h2 className="text-xl font-medium text-stone-900 mb-3 text-center">Les secteurs disponibles en Belgique francophone</h2>
             <p className="text-sm text-stone-500 text-center mb-8">Educ-Connect couvre tous les grands secteurs de l'éducation spécialisée.</p>
-            <div className="flex flex-wrap gap-3 justify-center">
-              {[
-                { emoji: "🧩", label: "Autisme (TSA)" },
-                { emoji: "🧠", label: "Handicap mental (DI)" },
-                { emoji: "♿", label: "Handicap moteur" },
-                { emoji: "👁️", label: "Handicap sensoriel" },
-                { emoji: "👶", label: "Aide à la jeunesse" },
-                { emoji: "🏥", label: "Psychiatrie" },
-                { emoji: "👴", label: "Seniors (Maison de repos et de soins)" },
-              ].map((s) => (
-                <span key={s.label} className="bg-white border border-orange-200 text-stone-700 px-4 py-2 rounded-full text-sm flex items-center gap-2">
-                  <span>{s.emoji}</span> {s.label}
-                </span>
-              ))}
-            </div>
+            <DynamicSectors />
           </div>
         </section>
 
@@ -113,18 +100,7 @@ export default function EtudiantsPage() {
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-xl font-medium text-stone-900 mb-3">Communes couvertes</h2>
             <p className="text-sm text-stone-500 mb-8">Des institutions dans les communes de Belgique francophone.</p>
-            <div className="flex flex-wrap gap-2 justify-center">
-              {[
-                "Anderlecht", "Auderghem", "Berchem-Sainte-Agathe", "Bruxelles (Ville)",
-                "Etterbeek", "Evere", "Forest", "Ganshoren", "Ixelles", "Jette",
-                "Koekelberg", "Molenbeek-Saint-Jean", "Saint-Gilles", "Saint-Josse-ten-Noode",
-                "Schaerbeek", "Uccle", "Watermael-Boitsfort", "Woluwe-Saint-Lambert", "Woluwe-Saint-Pierre",
-              ].map((c) => (
-                <span key={c} className="bg-stone-100 text-stone-600 px-3 py-1 rounded-full text-xs">
-                  {c}
-                </span>
-              ))}
-            </div>
+            <DynamicCities />
           </div>
         </section>
 

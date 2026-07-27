@@ -140,7 +140,8 @@
       "Bash(xargs -0 grep -l \"POST\\\\|PATCH\")",
       "Bash(taskkill /PID 30436 /F)",
       "PowerShell(Get-Process -Name node -ErrorAction SilentlyContinue)",
-      "Bash(curl -X POST http://localhost:3000/api/admin/seed-locations)"
+      "Bash(curl -X POST http://localhost:3000/api/admin/seed-locations)",
+      "Bash(grep -E \"\\\\.\\(tsx|ts\\)$\")"
     ]
   }
 }
