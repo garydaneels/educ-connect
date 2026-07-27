@@ -28,6 +28,12 @@ interface Institution {
   subscription?: { status: string } | null;
 }
 
+interface Province {
+  id: string;
+  name: string;
+  cities: Array<{ id: string; name: string }>;
+}
+
 function ProfileContent() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -38,10 +44,18 @@ function ProfileContent() {
   const [editSection, setEditSection] = useState<"infos" | "mission" | "stage" | "secteurs" | null>(null);
   const [saving, setSaving] = useState(false);
 
+  const [provinces, setProvinces] = useState<Province[]>([]);
+  const [province, setProvince] = useState("");
+  const [cities, setCities] = useState<Array<{ id: string; name: string }>>([]);
+
+  const [dynamicPublicTypes, setDynamicPublicTypes] = useState<Record<string, string>>({});
+  const [dynamicHebergements, setDynamicHebergements] = useState<Record<string, string>>({});
+  const [dynamicOrganismes, setDynamicOrganismes] = useState<Record<string, string>>({});
+
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [address, setAddress] = useState("");
-  const [commune, setCommune] = useState(COMMUNES_BRUXELLES[0]);
+  const [commune, setCommune] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [website, setWebsite] = useState("");
@@ -67,6 +81,48 @@ function ProfileContent() {
   }, [status, user, router]);
 
   useEffect(() => {
+    Promise.all([
+      fetch("/api/admin/provinces", { credentials: "include" }).then(r => r.ok ? r.json() : null),
+      fetch("/api/admin/config-items", { credentials: "include" }).then(r => r.ok ? r.json() : null),
+    ])
+      .then(([provData, configData]) => {
+        if (provData?.provinces) {
+          setProvinces(provData.provinces);
+          if (provData.provinces.length > 0 && !province) {
+            setProvince(provData.provinces[0].id);
+            setCities(provData.provinces[0].cities);
+          }
+        }
+        if (configData?.items) {
+          const pubTypes: Record<string, string> = {};
+          const hebs: Record<string, string> = {};
+          const orgs: Record<string, string> = {};
+
+          configData.items.forEach((item: any) => {
+            if (item.category === "SECTOR") pubTypes[item.key] = item.label;
+            if (item.category === "HEBERGEMENT") hebs[item.key] = item.label;
+            if (item.category === "ORGANISME") orgs[item.key] = item.label;
+          });
+
+          setDynamicPublicTypes(pubTypes);
+          setDynamicHebergements(hebs);
+          setDynamicOrganismes(orgs);
+        }
+      })
+      .catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    if (province) {
+      const p = provinces.find(pr => pr.id === province);
+      if (p) {
+        setCities(p.cities);
+        if (p.cities.length > 0) setCommune(p.cities[0].name);
+      }
+    }
+  }, [province, provinces]);
+
+  useEffect(() => {
     if (status !== "authenticated") return;
     fetch("/api/institutions/mine", { credentials: "include" })
       .then(r => r.ok ? r.json() : null)
@@ -77,7 +133,13 @@ function ProfileContent() {
     setName(data.name ?? "");
     setDescription(data.description ?? "");
     setAddress(data.address ?? "");
-    setCommune(data.commune ?? COMMUNES_BRUXELLES[0]);
+    setCommune(data.commune ?? "");
+
+    if (data.commune && provinces.length > 0) {
+      const provWithCity = provinces.find(p => p.cities.some(c => c.name === data.commune));
+      if (provWithCity) setProvince(provWithCity.id);
+    }
+
     setPhone(data.phone ?? "");
     setEmail(data.email ?? "");
     setWebsite(data.website ?? "");
@@ -244,10 +306,19 @@ function ProfileContent() {
                         className="w-full border border-stone-200 rounded-xl px-3 py-2.5 text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-sky-300" />
                     </div>
                     <div>
+                      <label className="block text-xs font-medium text-stone-500 mb-1.5">Province *</label>
+                      <select required value={province} onChange={e => setProvince(e.target.value)}
+                        className="w-full border border-stone-200 rounded-xl px-3 py-2.5 text-sm text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-sky-300">
+                        <option value="">Sélectionner une province</option>
+                        {provinces.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+                      </select>
+                    </div>
+                    <div>
                       <label className="block text-xs font-medium text-stone-500 mb-1.5">Commune *</label>
                       <select required value={commune} onChange={e => setCommune(e.target.value)}
                         className="w-full border border-stone-200 rounded-xl px-3 py-2.5 text-sm text-stone-900 bg-white focus:outline-none focus:ring-2 focus:ring-sky-300">
-                        {COMMUNES_BRUXELLES.map(c => <option key={c} value={c}>{c}</option>)}
+                        <option value="">Sélectionner une commune</option>
+                        {cities.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
                       </select>
                     </div>
                     <div className="sm:col-span-2">
@@ -329,7 +400,7 @@ function ProfileContent() {
                     <label className="block text-sm font-medium text-stone-700 mb-1">Secteurs d'activité</label>
                     <p className="text-xs text-stone-400 mb-2.5">Sélectionnez tous les types d'établissements qui vous correspondent</p>
                     <div className="flex flex-wrap gap-2">
-                      {Object.entries(PUBLIC_TYPES).map(([k, v]) => (
+                      {Object.entries(Object.keys(dynamicPublicTypes).length > 0 ? dynamicPublicTypes : PUBLIC_TYPES).map(([k, v]) => (
                         <button key={k} type="button" onClick={() => toggleMulti(k, publicTypes, setPublicTypes)}
                           className={`text-xs px-3 py-1.5 rounded-full border-2 transition-all ${publicTypes.includes(k) ? "border-purple-500 bg-purple-50 text-purple-700" : "border-stone-200 text-stone-600 hover:border-stone-300"}`}>
                           {v}
@@ -341,7 +412,7 @@ function ProfileContent() {
                     <label className="block text-sm font-medium text-stone-700 mb-1">Public accompagné</label>
                     <p className="text-xs text-stone-400 mb-2.5">Quel type de public accueillez-vous ?</p>
                     <div className="flex flex-wrap gap-2">
-                      {Object.entries(HEBERGEMENTS).map(([k, v]) => (
+                      {Object.entries(Object.keys(dynamicHebergements).length > 0 ? dynamicHebergements : HEBERGEMENTS).map(([k, v]) => (
                         <button key={k} type="button" onClick={() => toggleMulti(k, hebergements, setHebergements)}
                           className={`text-xs px-3 py-1.5 rounded-full border-2 transition-all ${hebergements.includes(k) ? "border-green-500 bg-green-50 text-green-700" : "border-stone-200 text-stone-600 hover:border-stone-300"}`}>
                           {v}
@@ -353,7 +424,7 @@ function ProfileContent() {
                     <label className="block text-sm font-medium text-stone-700 mb-1">Organisme de tutelle</label>
                     <p className="text-xs text-stone-400 mb-2.5">Sous quelle autorité fonctionne votre institution ?</p>
                     <div className="flex flex-wrap gap-2">
-                      {Object.entries(ORGANISMES).map(([k, v]) => (
+                      {Object.entries(Object.keys(dynamicOrganismes).length > 0 ? dynamicOrganismes : ORGANISMES).map(([k, v]) => (
                         <button key={k} type="button" onClick={() => toggleMulti(k, organismes, setOrganismes)}
                           className={`text-xs px-3 py-1.5 rounded-full border-2 transition-all ${organismes.includes(k) ? "border-orange-500 bg-orange-50 text-orange-700" : "border-stone-200 text-stone-600 hover:border-stone-300"}`}>
                           {v}
@@ -380,7 +451,7 @@ function ProfileContent() {
                         <div>
                           <p className="text-xs font-medium text-stone-400 mb-2">Secteurs d'activité</p>
                           <div className="flex flex-wrap gap-1.5">
-                            {types.map(t => <span key={t} className="text-xs bg-purple-50 text-purple-700 border border-purple-100 px-2.5 py-1 rounded-full">{PUBLIC_TYPES[t]}</span>)}
+                            {types.map(t => <span key={t} className="text-xs bg-purple-50 text-purple-700 border border-purple-100 px-2.5 py-1 rounded-full">{(Object.keys(dynamicPublicTypes).length > 0 ? dynamicPublicTypes : PUBLIC_TYPES)[t]}</span>)}
                           </div>
                         </div>
                       )}
@@ -388,7 +459,7 @@ function ProfileContent() {
                         <div>
                           <p className="text-xs font-medium text-stone-400 mb-2">Public accompagné</p>
                           <div className="flex flex-wrap gap-1.5">
-                            {hebs.map(h => <span key={h} className="text-xs bg-green-50 text-green-700 border border-green-100 px-2.5 py-1 rounded-full">{HEBERGEMENTS[h]}</span>)}
+                            {hebs.map(h => <span key={h} className="text-xs bg-green-50 text-green-700 border border-green-100 px-2.5 py-1 rounded-full">{(Object.keys(dynamicHebergements).length > 0 ? dynamicHebergements : HEBERGEMENTS)[h]}</span>)}
                           </div>
                         </div>
                       )}
@@ -396,7 +467,7 @@ function ProfileContent() {
                         <div>
                           <p className="text-xs font-medium text-stone-400 mb-2">Organisme de tutelle</p>
                           <div className="flex flex-wrap gap-1.5">
-                            {orgs.map(o => <span key={o} className="text-xs bg-sky-50 text-sky-700 border border-sky-100 px-2.5 py-1 rounded-full">{ORGANISMES[o]}</span>)}
+                            {orgs.map(o => <span key={o} className="text-xs bg-sky-50 text-sky-700 border border-sky-100 px-2.5 py-1 rounded-full">{(Object.keys(dynamicOrganismes).length > 0 ? dynamicOrganismes : ORGANISMES)[o]}</span>)}
                           </div>
                         </div>
                       )}
