@@ -139,7 +139,8 @@
       "Bash(git commit -m 'Add detailed roadmap of remaining security work *)",
       "Bash(xargs -0 grep -l \"POST\\\\|PATCH\")",
       "Bash(taskkill /PID 30436 /F)",
-      "PowerShell(Get-Process -Name node -ErrorAction SilentlyContinue)"
+      "PowerShell(Get-Process -Name node -ErrorAction SilentlyContinue)",
+      "Bash(curl -X POST http://localhost:3000/api/admin/seed-locations)"
     ]
   }
 }
