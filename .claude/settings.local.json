@@ -141,7 +141,9 @@
       "Bash(taskkill /PID 30436 /F)",
       "PowerShell(Get-Process -Name node -ErrorAction SilentlyContinue)",
       "Bash(curl -X POST http://localhost:3000/api/admin/seed-locations)",
-      "Bash(grep -E \"\\\\.\\(tsx|ts\\)$\")"
+      "Bash(grep -E \"\\\\.\\(tsx|ts\\)$\")",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(ping -c 3 aws-0-eu-central-1.pooler.supabase.com)"
     ]
   }
 }

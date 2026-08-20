@@ -1,4 +1,6 @@
-import nodemailer from "nodemailer";
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 function escapeHtml(s: string): string {
   return s
@@ -9,17 +11,7 @@ function escapeHtml(s: string): string {
     .replace(/'/g, "&#39;");
 }
 
-const transport = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST || "smtp.gmail.com",
-  port: Number(process.env.EMAIL_PORT) || 587,
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
-
-const FROM = process.env.EMAIL_FROM || "Educ-Connect <contact@educonnect.be>";
+const FROM = process.env.EMAIL_FROM || "noreply@educonnect.be";
 const ADMIN = process.env.ADMIN_EMAIL || "admin@educonnect.be";
 const BASE = process.env.NEXTAUTH_URL || "http://localhost:3000";
 if (process.env.NODE_ENV === "production" && (!process.env.NEXTAUTH_URL || process.env.NEXTAUTH_URL.includes("localhost"))) {
