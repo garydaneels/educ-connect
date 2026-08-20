@@ -64,7 +64,7 @@ export async function sendWelcomeStudent(to: string, name: string) {
     </ul>
     ${btn(`${BASE}/student`, "Explorer les institutions →", "#ea580c")}
   `;
-  await transport.sendMail({ from: FROM, to, subject: "Bienvenue sur Educ-Connect 🎓", html: base(body, "Bienvenue") });
+  await resend.emails.send({ from: FROM, to, subject: "Bienvenue sur Educ-Connect 🎓", html: base(body, "Bienvenue") });
 }
 
 // ── Bienvenue institution ──────────────────────────────────────────────────
@@ -87,7 +87,7 @@ export async function sendWelcomeInstitution(to: string, name: string, instituti
     </ul>
     ${btn(`${BASE}/institution/membership`, "Activer mon abonnement →", "#0369a1")}
   `;
-  await transport.sendMail({ from: FROM, to, subject: `Bienvenue sur Educ-Connect — ${institutionName}`, html: base(body, "Bienvenue") });
+  await resend.emails.send({ from: FROM, to, subject: `Bienvenue sur Educ-Connect — ${institutionName}`, html: base(body, "Bienvenue") });
 }
 
 // ── Admin : nouvelle inscription ───────────────────────────────────────────
@@ -108,7 +108,7 @@ export async function sendAdminNewRegistration(role: "STUDENT" | "INSTITUTION" |
     </div>
     ${isInst ? btn(`${BASE}/admin`, "Gérer les abonnements →") : ""}
   `;
-  await transport.sendMail({ from: FROM, to: ADMIN, subject: `${emoji} Nouvelle inscription ${roleLabel} — ${name}`, html: base(body, "Nouvelle inscription") });
+  await resend.emails.send({ from: FROM, to: ADMIN, subject: `${emoji} Nouvelle inscription ${roleLabel} — ${name}`, html: base(body, "Nouvelle inscription") });
 }
 
 // ── Institution : nouvelle candidature ────────────────────────────────────
@@ -125,7 +125,7 @@ export async function sendInstitutionNewApplication(to: string, institutionName:
     <p style="color:#57534e;font-size:14px;">Consultez le CV, la lettre de motivation et répondez au candidat depuis votre espace institution.</p>
     ${btn(`${BASE}/institution/applications`, "Voir la candidature →")}
   `;
-  await transport.sendMail({ from: FROM, to, subject: `📩 Nouvelle candidature — ${studentName}`, html: base(body, "Nouvelle candidature") });
+  await resend.emails.send({ from: FROM, to, subject: `📩 Nouvelle candidature — ${studentName}`, html: base(body, "Nouvelle candidature") });
 }
 
 // ── Étudiant : candidature acceptée + RDV ─────────────────────────────────
@@ -145,7 +145,7 @@ export async function sendStudentApplicationAccepted(to: string, studentName: st
     <p style="color:#57534e;font-size:14px;">Vous pouvez échanger des messages avec l'institution depuis votre espace candidatures.</p>
     ${btn(`${BASE}/student/applications`, "Voir mes candidatures →", "#16a34a")}
   `;
-  await transport.sendMail({ from: FROM, to, subject: `🎉 Candidature acceptée — ${institutionName}`, html: base(body, "Candidature acceptée") });
+  await resend.emails.send({ from: FROM, to, subject: `🎉 Candidature acceptée — ${institutionName}`, html: base(body, "Candidature acceptée") });
 }
 
 // ── Admin : stage trouvé ───────────────────────────────────────────────────
@@ -164,7 +164,7 @@ export async function sendAdminStageFound(institutionName: string, studentName: 
     </div>
     ${btn(`${BASE}/admin`, "Voir le tableau de bord →")}
   `;
-  await transport.sendMail({ from: FROM, to: ADMIN, subject: `✅ Stage confirmé — ${studentName} chez ${institutionName}`, html: base(body, "Stage confirmé") });
+  await resend.emails.send({ from: FROM, to: ADMIN, subject: `✅ Stage confirmé — ${studentName} chez ${institutionName}`, html: base(body, "Stage confirmé") });
 }
 
 // ── Étudiant : stage confirmé (notification finale) ───────────────────────
@@ -180,7 +180,7 @@ export async function sendStudentStageConfirmed(to: string, studentName: string,
     </div>
     ${btn(`${BASE}/student/applications`, "Voir mes candidatures →", "#16a34a")}
   `;
-  await transport.sendMail({ from: FROM, to, subject: `🏆 Stage confirmé — ${institutionName}`, html: base(body, "Stage confirmé") });
+  await resend.emails.send({ from: FROM, to, subject: `🏆 Stage confirmé — ${institutionName}`, html: base(body, "Stage confirmé") });
 }
 
 // ── Étudiant : candidature refusée ────────────────────────────────────────
@@ -196,7 +196,7 @@ export async function sendStudentApplicationRejected(to: string, studentName: st
     </p>
     ${btn(`${BASE}/student`, "Continuer mes recherches →", "#ea580c")}
   `;
-  await transport.sendMail({ from: FROM, to, subject: `Candidature non retenue — ${institutionName}`, html: base(body, "Candidature non retenue") });
+  await resend.emails.send({ from: FROM, to, subject: `Candidature non retenue — ${institutionName}`, html: base(body, "Candidature non retenue") });
 }
 
 // ── Nouveau message reçu ───────────────────────────────────────────────────
@@ -210,7 +210,7 @@ export async function sendNewMessage(to: string, recipientName: string, senderNa
     ${preview ? `<div style="background:#f5f5f4;border-left:3px solid #d6d3d1;border-radius:0 8px 8px 0;padding:14px 18px;margin:20px 0;color:#57534e;font-size:14px;font-style:italic;">"${preview}"</div>` : ""}
     ${btn(`${BASE}${link}`, "Répondre →", "#0369a1")}
   `;
-  await transport.sendMail({ from: FROM, to, subject: `💬 Nouveau message de ${senderName}`, html: base(body, "Nouveau message") });
+  await resend.emails.send({ from: FROM, to, subject: `💬 Nouveau message de ${senderName}`, html: base(body, "Nouveau message") });
 }
 
 // ── Institution : demande de changement d'horaire ─────────────────────────
@@ -229,7 +229,7 @@ export async function sendInstitutionScheduleRequest(to: string, institutionName
     <p style="color:#a8a29e;font-size:12px;">⚠️ Vous devez être connecté(e) à Educ-Connect pour accéder à ce lien.</p>
     ${btn(`${BASE}${stageLink}`, "Voir la demande →", "#0369a1")}
   `;
-  await transport.sendMail({ from: FROM, to, subject: `📅 Demande d'horaire — ${studentName}`, html: base(body, "Demande d'horaire") });
+  await resend.emails.send({ from: FROM, to, subject: `📅 Demande d'horaire — ${studentName}`, html: base(body, "Demande d'horaire") });
 }
 
 // ── Étudiant : réponse à sa demande d'horaire ────────────────────────────
@@ -243,7 +243,7 @@ export async function sendStudentScheduleRequestResponse(to: string, studentName
     ${responseNote ? `<div style="background:#f5f5f4;border-left:3px solid #d6d3d1;border-radius:0 8px 8px 0;padding:14px 18px;margin:20px 0;color:#57534e;font-size:14px;">${escapeHtml(responseNote)}</div>` : ""}
     ${btn(`${BASE}${stageLink}`, "Voir mon stage →", approved ? "#16a34a" : "#dc2626")}
   `;
-  await transport.sendMail({ from: FROM, to, subject: `${approved ? "✅" : "❌"} Demande d'horaire ${approved ? "acceptée" : "refusée"} — ${institutionName}`, html: base(body, "Réponse demande d'horaire") });
+  await resend.emails.send({ from: FROM, to, subject: `${approved ? "✅" : "❌"} Demande d'horaire ${approved ? "acceptée" : "refusée"} — ${institutionName}`, html: base(body, "Réponse demande d'horaire") });
 }
 
 // ── Institution : indisponibilité signalée ────────────────────────────────
@@ -262,7 +262,7 @@ export async function sendInstitutionUnavailability(to: string, institutionName:
     <p style="color:#57534e;font-size:14px;">Vous pouvez approuver ou refuser cette indisponibilité depuis la page du stage.</p>
     ${btn(`${BASE}${stageLink}`, "Voir le stage →", "#0369a1")}
   `;
-  await transport.sendMail({ from: FROM, to, subject: `🗓️ Indisponibilité signalée — ${studentName}`, html: base(body, "Indisponibilité") });
+  await resend.emails.send({ from: FROM, to, subject: `🗓️ Indisponibilité signalée — ${studentName}`, html: base(body, "Indisponibilité") });
 }
 
 // ── Étudiant : stage arrêté ou non validé ────────────────────────────────
@@ -284,7 +284,7 @@ export async function sendStudentStageStatusChanged(to: string, studentName: str
     </div>
     ${btn(`${BASE}/student/applications`, "Voir mes candidatures →", c.color)}
   `;
-  await transport.sendMail({ from: FROM, to, subject: `${c.emoji} Votre stage est ${c.label} — ${institutionName}`, html: base(body, `Stage ${c.label}`) });
+  await resend.emails.send({ from: FROM, to, subject: `${c.emoji} Votre stage est ${c.label} — ${institutionName}`, html: base(body, `Stage ${c.label}`) });
 }
 
 // ── Vérification email ────────────────────────────────────────────────────
@@ -304,7 +304,7 @@ export async function sendEmailVerification(to: string, name: string, token: str
       Si vous n'avez pas créé de compte Educ-Connect, ignorez cet email.
     </p>
   `;
-  await transport.sendMail({ from: FROM, to, subject: "Confirmez votre adresse email — Educ-Connect", html: base(body, "Confirmation email") });
+  await resend.emails.send({ from: FROM, to, subject: "Confirmez votre adresse email — Educ-Connect", html: base(body, "Confirmation email") });
 }
 
 // ── Réinitialisation mot de passe ─────────────────────────────────────────
@@ -324,7 +324,7 @@ export async function sendPasswordReset(to: string, name: string, token: string)
       Si vous n'êtes pas à l'origine de cette demande, ignorez cet email — votre mot de passe reste inchangé.
     </p>
   `;
-  await transport.sendMail({ from: FROM, to, subject: "Réinitialisation de votre mot de passe — Educ-Connect", html: base(body, "Réinitialisation mot de passe") });
+  await resend.emails.send({ from: FROM, to, subject: "Réinitialisation de votre mot de passe — Educ-Connect", html: base(body, "Réinitialisation mot de passe") });
 }
 
 // ── Institution : abonnement activé par l'admin ───────────────────────────
@@ -349,7 +349,7 @@ export async function sendSubscriptionActivated(to: string, name: string, instit
     </ul>
     ${btn(`${BASE}/institution`, "Accéder à mon espace →", "#0369a1")}
   `;
-  await transport.sendMail({ from: FROM, to, subject: `✅ Abonnement activé — ${institutionName}`, html: base(body, "Abonnement activé") });
+  await resend.emails.send({ from: FROM, to, subject: `✅ Abonnement activé — ${institutionName}`, html: base(body, "Abonnement activé") });
 }
 
 // ── Institution : abonnement expirant bientôt ─────────────────────────────
@@ -370,7 +370,7 @@ export async function sendSubscriptionExpiry(to: string, name: string, instituti
     </p>
     ${btn(`${BASE}/institution/membership`, "Renouveler mon abonnement →", "#d97706")}
   `;
-  await transport.sendMail({ from: FROM, to, subject: `⚠️ Abonnement expirant dans ${daysLeft}j — ${institutionName}`, html: base(body, "Abonnement expirant") });
+  await resend.emails.send({ from: FROM, to, subject: `⚠️ Abonnement expirant dans ${daysLeft}j — ${institutionName}`, html: base(body, "Abonnement expirant") });
 }
 
 // ── Institution : rappel candidatures en attente ──────────────────────────
@@ -387,7 +387,7 @@ export async function sendPendingApplicationReminder(to: string, institutionName
     </div>
     ${btn(`${BASE}/institution/applications`, "Voir les candidatures →")}
   `;
-  await transport.sendMail({ from: FROM, to, subject: `📋 ${count} candidature${count > 1 ? "s" : ""} en attente — ${institutionName}`, html: base(body, "Candidatures en attente") });
+  await resend.emails.send({ from: FROM, to, subject: `📋 ${count} candidature${count > 1 ? "s" : ""} en attente — ${institutionName}`, html: base(body, "Candidatures en attente") });
 }
 
 // ── Facture institution ───────────────────────────────────────────────────
@@ -463,7 +463,7 @@ export async function sendInvoiceEmail(opts: {
 
     ${btn(`${BASE}/institution/billing`, "Voir mon abonnement →")}
   `;
-  await transport.sendMail({
+  await resend.emails.send({
     from: FROM,
     to,
     bcc: ADMIN,
@@ -486,7 +486,7 @@ export async function sendStudentInstitutionInterest(to: string, studentName: st
     </div>
     ${btn(`${BASE}/student/applications`, "Voir l'invitation →", "#ea580c")}
   `;
-  await transport.sendMail({ from: FROM, to, subject: `💌 ${institutionName} est intéressée par votre profil`, html: base(body, "Invitation de stage") });
+  await resend.emails.send({ from: FROM, to, subject: `💌 ${institutionName} est intéressée par votre profil`, html: base(body, "Invitation de stage") });
 }
 
 // ── Institution : réponse de l'étudiant à une invitation ──────────────────
@@ -500,7 +500,7 @@ export async function sendInstitutionInvitationAccepted(to: string, institutionN
     </p>
     ${btn(`${appLink}`, "Voir la candidature →", "#0369a1")}
   `;
-  await transport.sendMail({ from: FROM, to, subject: `✅ ${studentName} a accepté votre invitation — Educ-Connect`, html: base(body, "Invitation acceptée") });
+  await resend.emails.send({ from: FROM, to, subject: `✅ ${studentName} a accepté votre invitation — Educ-Connect`, html: base(body, "Invitation acceptée") });
 }
 
 export async function sendInstitutionInvitationDeclined(to: string, institutionName: string, studentName: string) {
@@ -512,7 +512,7 @@ export async function sendInstitutionInvitationDeclined(to: string, institutionN
     </p>
     ${btn(`${BASE}/institution/students`, "Explorer les étudiants →", "#0369a1")}
   `;
-  await transport.sendMail({ from: FROM, to, subject: `${studentName} a décliné votre invitation — Educ-Connect`, html: base(body, "Invitation déclinée") });
+  await resend.emails.send({ from: FROM, to, subject: `${studentName} a décliné votre invitation — Educ-Connect`, html: base(body, "Invitation déclinée") });
 }
 
 export async function sendStudentUnavailabilityResponse(to: string, studentName: string, institutionName: string, approved: boolean, stageLink: string) {
@@ -524,7 +524,7 @@ export async function sendStudentUnavailabilityResponse(to: string, studentName:
     </p>
     ${btn(`${BASE}${stageLink}`, "Voir mon stage →", approved ? "#16a34a" : "#dc2626")}
   `;
-  await transport.sendMail({ from: FROM, to, subject: `${approved ? "✅" : "❌"} Demande d'indisponibilité ${approved ? "approuvée" : "refusée"} — ${institutionName}`, html: base(body, `Réponse indisponibilité`) });
+  await resend.emails.send({ from: FROM, to, subject: `${approved ? "✅" : "❌"} Demande d'indisponibilité ${approved ? "approuvée" : "refusée"} — ${institutionName}`, html: base(body, `Réponse indisponibilité`) });
 }
 
 // ── Mot de passe oublié ────────────────────────────────────────────────────
@@ -545,7 +545,7 @@ export async function sendForgotPassword(to: string, name: string, code: string)
     </p>
     ${btn(`${BASE}/login`, "Se connecter →", "#ea580c")}
   `;
-  await transport.sendMail({ from: FROM, to, subject: "Votre nouveau code d'accès — Educ-Connect", html: base(body, "Nouveau code d'accès") });
+  await resend.emails.send({ from: FROM, to, subject: "Votre nouveau code d'accès — Educ-Connect", html: base(body, "Nouveau code d'accès") });
 }
 
 // ── Subscription : Email à l'institution ────────────────────────────────────
@@ -571,7 +571,7 @@ export async function sendSubscriptionPendingToInstitution(to: string, name: str
       Communication de virement : <strong style="font-family:monospace;font-size:14px;">${communication}</strong>
     </p>
   `;
-  await transport.sendMail({ from: FROM, to, subject: `Demande enregistrée — ${institutionName}`, html: base(body, "Demande enregistrée") });
+  await resend.emails.send({ from: FROM, to, subject: `Demande enregistrée — ${institutionName}`, html: base(body, "Demande enregistrée") });
 }
 
 // ── Subscription : Email à l'admin (facturation) ─────────────────────────────
@@ -588,5 +588,5 @@ export async function sendSubscriptionPendingToAdmin(institutionName: string, in
       <div><strong>Date :</strong> ${new Date().toLocaleString("fr-BE")}</div>
     </div>
   `;
-  await transport.sendMail({ from: FROM, to: ADMIN, subject: `📋 Subscription en attente — ${institutionName}`, html: base(body, "Subscription en attente") });
+  await resend.emails.send({ from: FROM, to: ADMIN, subject: `📋 Subscription en attente — ${institutionName}`, html: base(body, "Subscription en attente") });
 }

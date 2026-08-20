@@ -143,7 +143,11 @@
       "Bash(curl -X POST http://localhost:3000/api/admin/seed-locations)",
       "Bash(grep -E \"\\\\.\\(tsx|ts\\)$\")",
       "Bash(curl -s http://localhost:3000)",
-      "Bash(ping -c 3 aws-0-eu-central-1.pooler.supabase.com)"
+      "Bash(ping -c 3 aws-0-eu-central-1.pooler.supabase.com)",
+      "Bash(sed -i 's/await transport\\\\.sendMail\\({/try {\\\\n    await resend.emails.send\\({/g' src/lib/email.ts)",
+      "Bash(sed -i 's/html: base\\(body, \"[^\"]*\"\\) }\\);/html: base\\(body, \"\\\\1\"\\) }\\);\\\\n  } catch \\(error\\) {\\\\n    console.error\\(\"Failed to send email:\", error\\);\\\\n  }/g' src/lib/email.ts)",
+      "Bash(timeout 120 npm run build)",
+      "Bash(git checkout *)"
     ]
   }
 }
