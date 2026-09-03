@@ -27,7 +27,7 @@ export default async function InstitutionsAccueilPage() {
   }
 
   const sectors = dbSectors.length > 0
-    ? dbSectors.map(s => ({ emoji: s.emoji ?? SECTOR_EMOJI[s.key] ?? "🏢", label: s.label }))
+    ? dbSectors.map((s: any) => ({ emoji: s.emoji ?? SECTOR_EMOJI[s.key] ?? "🏢", label: s.label }))
     : Object.entries(PUBLIC_TYPES).map(([key, label]) => ({ emoji: SECTOR_EMOJI[key] ?? "🏢", label }));
   return (
     <div className="min-h-screen flex flex-col bg-white">
