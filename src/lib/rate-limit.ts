@@ -1,48 +1,64 @@
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
+// Production: Use Upstash Redis for distributed rate limiting
+// Development: Fallback to in-memory if env vars not set
+const redis = process.env.UPSTASH_REDIS_REST_URL
+  ? new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN,
+    })
+  : null;
+
+// In-memory fallback for development
 type Entry = { count: number; resetAt: number };
-const store = new Map<string, Entry>();
+const memoryStore = new Map<string, Entry>();
 
-// Cleanup old entries every 5 minutes
-const CLEANUP_INTERVAL = 5 * 60 * 1000;
-let lastCleanup = Date.now();
+async function rateLimitUpstash(
+  key: string,
+  max: number,
+  windowSeconds: number
+): Promise<boolean> {
+  if (!redis) return rateLimitMemory(key, max, windowSeconds * 1000);
 
-function cleanup() {
-  const now = Date.now();
-  if (now - lastCleanup < CLEANUP_INTERVAL) return;
+  try {
+    const ratelimit = new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(max, `${windowSeconds}s`),
+    });
 
-  for (const [key, entry] of store.entries()) {
-    if (now > entry.resetAt) {
-      store.delete(key);
-    }
+    const result = await ratelimit.limit(key);
+    return result.success;
+  } catch (error) {
+    console.error("Rate limit check failed, falling back to memory:", error);
+    return rateLimitMemory(key, max, windowSeconds * 1000);
   }
-  lastCleanup = now;
 }
 
-export function rateLimit(key: string, max: number, windowMs: number): boolean {
-  cleanup();
+function rateLimitMemory(key: string, max: number, windowMs: number): boolean {
   const now = Date.now();
-  const entry = store.get(key);
+  const entry = memoryStore.get(key);
 
   if (!entry || now > entry.resetAt) {
-    store.set(key, { count: 1, resetAt: now + windowMs });
-    return true; // autorisé
+    memoryStore.set(key, { count: 1, resetAt: now + windowMs });
+    return true;
   }
 
-  if (entry.count >= max) return false; // bloqué
+  if (entry.count >= max) return false;
 
   entry.count++;
   return true;
 }
 
+export async function rateLimit(
+  key: string,
+  max: number,
+  windowSeconds: number
+): Promise<boolean> {
+  return rateLimitUpstash(key, max, windowSeconds);
+}
+
 export function getIp(req: Request): string {
-  // Only trust X-Forwarded-For if explicitly enabled
-  const trustProxy = process.env.TRUST_PROXY === "true";
-
-  if (!trustProxy) {
-    // Fallback to unknown to prevent spoofing
-    return "unknown";
-  }
-
-  // Get the first IP from X-Forwarded-For (rightmost is most recent proxy)
   const forwardedFor = req.headers.get("x-forwarded-for");
   if (forwardedFor) {
     const ips = forwardedFor.split(",").map((ip) => ip.trim());

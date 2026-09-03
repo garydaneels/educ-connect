@@ -1,6 +1,7 @@
 # 🔐 CHECKLIST SÉCURITÉ - ACTIONS URGENTES
 
 **Date: 2026-09-03**  
+**Last Updated: 2026-09-03 (Rate-limiting Upstash + Sentry added)**  
 **Status: ⚠️ À compléter AVANT déploiement en production**
 
 ---
@@ -64,23 +65,46 @@ npm run dev
 
 ## 🟠 À FAIRE CETTE SEMAINE
 
-### 4. Rate-limiting distribué
+### 4. Rate-limiting distribué avec Upstash ✅ IMPLÉMENTÉ
 
-Migrate de in-memory vers Upstash Redis:
+Migration de in-memory vers Upstash Redis:
 
 ```bash
-# 1. Créer un compte Upstash: https://upstash.com
+# 1. Créer un compte Upstash: https://upstash.com/
 # 2. Créer une base de données Redis
-# 3. Récupérer UPSTASH_REDIS_REST_URL et UPSTASH_REDIS_REST_TOKEN
+# 3. Copier UPSTASH_REDIS_REST_URL et UPSTASH_REDIS_REST_TOKEN
 # 4. Ajouter à .env:
 ```
 
 ```env
-UPSTASH_REDIS_REST_URL=https://...
-UPSTASH_REDIS_REST_TOKEN=...
+UPSTASH_REDIS_REST_URL=https://your-upstash-url.upstash.io/
+UPSTASH_REDIS_REST_TOKEN=your_token_here
 ```
 
-**Fichier à implémenter:** `src/lib/rate-limit-distributed.ts`
+**Status:** ✅ Code implémenté dans `src/lib/rate-limit.ts`
+- Utilise Upstash en production
+- Fallback en-memory en développement
+- 6 endpoints protégés: register, contact, jobs apply, messages, job-applications, forgot-password
+
+### 5. Monitoring avec Sentry ✅ IMPLÉMENTÉ
+
+Setup d'error tracking et monitoring:
+
+```bash
+# 1. Créer un compte Sentry: https://sentry.io/
+# 2. Créer un projet Next.js
+# 3. Copier le SENTRY_DSN
+# 4. Ajouter à .env:
+```
+
+```env
+SENTRY_DSN=https://your-key@sentry.io/your-project-id
+```
+
+**Status:** ✅ Configuration basique implémentée
+- `sentry.config.ts` pour l'initialisation
+- Captures les erreurs server et client
+- Disable automatiquement si SENTRY_DSN absent
 
 ### 5. Configurer RESEND_WEBHOOK_SECRET
 - [ ] Vérifier que `.env` a `RESEND_WEBHOOK_SECRET`

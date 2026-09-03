@@ -3,7 +3,7 @@ import { rateLimit, getIp } from "@/lib/rate-limit";
 import { sendContactFormToAdmin, sendContactFormConfirmation } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
-  if (!rateLimit(getIp(req), 5, 60 * 60 * 1000)) {
+  if (!(await rateLimit(getIp(req), 5, 60 * 60))) {
     return NextResponse.json({ error: "Trop de messages envoyés. Réessayez dans une heure." }, { status: 429 });
   }
 

@@ -6,7 +6,7 @@ import { sendAdminNewRegistration, sendEmailVerification } from "@/lib/email";
 import { rateLimit, getIp } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
-  if (!rateLimit(getIp(req), 5, 60 * 60 * 1000)) {
+  if (!(await rateLimit(getIp(req), 5, 60 * 60))) {
     return NextResponse.json({ error: "Trop de tentatives. Réessayez dans une heure." }, { status: 429 });
   }
 

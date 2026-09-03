@@ -5,7 +5,7 @@ import { sendPasswordReset } from "@/lib/email";
 import { rateLimit, getIp } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
-  if (!rateLimit(getIp(req), 3, 15 * 60 * 1000)) {
+  if (!(await rateLimit(getIp(req), 3, 15 * 60))) {
     return NextResponse.json({ ok: true }); // même réponse pour ne pas révéler le blocage
   }
 

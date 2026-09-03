@@ -4,7 +4,7 @@ import { rateLimit, getIp } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   // Rate limit: 5 applications per hour per IP
-  if (!rateLimit(getIp(req), 5, 60 * 60 * 1000)) {
+  if (!(await rateLimit(getIp(req), 5, 60 * 60))) {
     return NextResponse.json({ error: "Trop de tentatives. Réessayez dans une heure." }, { status: 429 });
   }
 

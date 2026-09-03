@@ -35,7 +35,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ app
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ applicationId: string }> }) {
   // Rate limit: 20 messages per hour per user
-  if (!rateLimit(getIp(req), 20, 60 * 60 * 1000)) {
+  if (!(await rateLimit(getIp(req), 20, 60 * 60))) {
     return NextResponse.json({ error: "Trop de messages. Réessayez dans une heure." }, { status: 429 });
   }
 
