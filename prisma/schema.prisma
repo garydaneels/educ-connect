@@ -420,3 +420,26 @@ model City {
   @@index([provinceId])
   @@index([name])
 }
+
+model EmailEvent {
+  id        String    @id @default(cuid())
+  email     String    // adresse email destinataire
+  eventType String    // "sent" | "delivered" | "opened" | "clicked" | "bounced" | "complained"
+  subject   String?   // sujet du mail
+  resendId  String?   // ID de l'email dans Resend
+
+  // Données additionnelles selon le type d'événement
+  clickedUrl String?   // URL cliquée si eventType == "clicked"
+  bounceType String?   // "permanent" | "temporary" si eventType == "bounced"
+  bounceReason String? // raison du bounce
+
+  // Métadonnées
+  metadata  String    @default("{}")  // JSON string pour données supplémentaires
+  timestamp DateTime  @default(now())
+  createdAt DateTime  @default(now())
+
+  @@index([email])
+  @@index([eventType])
+  @@index([resendId])
+  @@index([timestamp])
+}

@@ -1,6 +1,23 @@
 import { Resend } from 'resend';
+import { prisma } from '@/lib/prisma';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+async function trackEmail(to: string, subject: string | null, resendId?: string) {
+  try {
+    await prisma.emailEvent.create({
+      data: {
+        email: to,
+        eventType: 'sent',
+        subject: subject || undefined,
+        resendId: resendId || undefined,
+        metadata: JSON.stringify({ timestamp: new Date().toISOString() }),
+      },
+    });
+  } catch (error) {
+    console.error('Failed to track email:', error);
+  }
+}
 
 function escapeHtml(s: string): string {
   return s
@@ -607,7 +624,8 @@ export async function sendContactFormToAdmin(name: string, email: string, subjec
       <p style="margin:0;white-space:pre-wrap;">${escapeHtml(message)}</p>
     </div>
   `;
-  await resend.emails.send({ from: FROM, to: "edu-connect@outlook.be", subject: `📬 Contact — ${subject}`, html: base(body, "Formulaire de contact") });
+  const result = await resend.emails.send({ from: FROM, to: "edu-connect@outlook.be", subject: `📬 Contact — ${subject}`, html: base(body, "Formulaire de contact") });
+  await trackEmail("edu-connect@outlook.be", `📬 Contact — ${subject}`, result.id);
 }
 
 // ── Formulaire de contact : confirmation à l'utilisateur ────────────────────
@@ -627,5 +645,6 @@ export async function sendContactFormConfirmation(to: string, name: string) {
     </p>
     ${btn(`${BASE}`, "Retour à Educ-Connect →", "#0369a1")}
   `;
-  await resend.emails.send({ from: FROM, to, subject: "Merci pour votre message — Educ-Connect", html: base(body, "Confirmation de contact") });
+  const result = await resend.emails.send({ from: FROM, to, subject: "Merci pour votre message — Educ-Connect", html: base(body, "Confirmation de contact") });
+  await trackEmail(to, "Merci pour votre message — Educ-Connect", result.id);
 }
