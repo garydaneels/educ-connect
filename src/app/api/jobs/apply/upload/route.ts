@@ -36,7 +36,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Format non autorisé (PDF ou Word uniquement)" }, { status: 400 });
     }
 
-    const ext = "." + (file.name.split(".").pop() || "pdf");
+    const ALLOWED_EXTENSIONS = ["pdf", "doc", "docx"];
+    const fileExt = file.name.split(".").pop()?.toLowerCase();
+    if (!fileExt || !ALLOWED_EXTENSIONS.includes(fileExt)) {
+      return NextResponse.json({ error: "Extension non autorisée (PDF ou Word uniquement)" }, { status: 400 });
+    }
+
+    const ext = "." + fileExt;
     const timestamp = Date.now();
     const storagePath = `job-applications/${timestamp}_${type}${ext}`;
     const buffer = Buffer.from(await file.arrayBuffer());

@@ -1,14 +1,37 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Webhook } from "svix";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(req: NextRequest) {
   try {
-    const event = await req.json();
+    const webhookSecret = process.env.RESEND_WEBHOOK_SECRET;
+    if (!webhookSecret) {
+      console.error("❌ RESEND_WEBHOOK_SECRET not configured in .env");
+      return NextResponse.json(
+        { error: "Webhook secret not configured" },
+        { status: 500 }
+      );
+    }
 
-    // Vérifier le token Resend (optionnel mais recommandé)
-    const resendToken = req.headers.get("svix-id");
-    if (!resendToken) {
-      console.warn("Webhook reçu sans token Resend");
+    // Vérifier la signature du webhook avec Svix
+    const svixHeaders = {
+      "svix-id": req.headers.get("svix-id") || "",
+      "svix-timestamp": req.headers.get("svix-timestamp") || "",
+      "svix-signature": req.headers.get("svix-signature") || "",
+    };
+
+    const body = await req.text();
+    const wh = new Webhook(webhookSecret);
+
+    let event;
+    try {
+      event = wh.verify(body, svixHeaders) as any;
+    } catch (error) {
+      console.error("❌ Webhook signature verification failed:", error);
+      return NextResponse.json(
+        { error: "Webhook verification failed" },
+        { status: 401 }
+      );
     }
 
     const { type, data } = event;

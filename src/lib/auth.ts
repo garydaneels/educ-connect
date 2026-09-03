@@ -19,7 +19,6 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         try {
           if (!credentials?.email || !credentials?.password) {
-            console.log("Missing credentials");
             return null;
           }
 
@@ -28,20 +27,16 @@ export const authOptions: NextAuthOptions = {
           });
 
           if (!user) {
-            console.log("User not found:", credentials.email);
             return null;
           }
 
           const valid = await bcrypt.compare(credentials.password, user.password);
           if (!valid) {
-            console.log("Invalid password for user:", credentials.email);
             return null;
           }
 
-          console.log("Auth successful for:", credentials.email, "role:", user.role);
           return { id: user.id, name: user.name, email: user.email, role: user.role };
         } catch (error) {
-          console.error("Auth error:", error);
           return null;
         }
       },

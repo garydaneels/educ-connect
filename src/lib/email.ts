@@ -625,7 +625,9 @@ export async function sendContactFormToAdmin(name: string, email: string, subjec
     </div>
   `;
   const result = await resend.emails.send({ from: FROM, to: "edu-connect@outlook.be", subject: `📬 Contact — ${subject}`, html: base(body, "Formulaire de contact") });
-  await trackEmail("edu-connect@outlook.be", `📬 Contact — ${subject}`, result.id);
+  if (result.data?.id) {
+    await trackEmail("edu-connect@outlook.be", `📬 Contact — ${subject}`, result.data.id);
+  }
 }
 
 // ── Formulaire de contact : confirmation à l'utilisateur ────────────────────
@@ -646,5 +648,7 @@ export async function sendContactFormConfirmation(to: string, name: string) {
     ${btn(`${BASE}`, "Retour à Educ-Connect →", "#0369a1")}
   `;
   const result = await resend.emails.send({ from: FROM, to, subject: "Merci pour votre message — Educ-Connect", html: base(body, "Confirmation de contact") });
-  await trackEmail(to, "Merci pour votre message — Educ-Connect", result.id);
+  if (result.data?.id) {
+    await trackEmail(to, "Merci pour votre message — Educ-Connect", result.data.id);
+  }
 }

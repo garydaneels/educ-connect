@@ -1,17 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { generatePaymentReference } from "@/lib/payment";
+
+const addonRequestSchema = z.object({
+  subscriptionId: z.string().cuid("Invalid subscription ID"),
+  jobsAddonPacks: z.number().int().min(0).default(0),
+  jobOffersAddonPacks: z.number().int().min(0).default(0),
+  exemptFromVAT: z.boolean().default(false),
+});
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session?.user) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
 
   try {
-    const { subscriptionId, jobsAddonPacks, jobOffersAddonPacks, exemptFromVAT } = await req.json();
-
-    if (!subscriptionId) return NextResponse.json({ error: "Subscription ID required" }, { status: 400 });
+    const body = await req.json();
+    const validated = addonRequestSchema.parse(body);
+    const { subscriptionId, jobsAddonPacks, jobOffersAddonPacks, exemptFromVAT } = validated;
 
     // Vérifier que la subscription appartient à l'institution de l'utilisateur
     const subscription = await prisma.subscription.findUnique({
@@ -39,6 +47,9 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(addonRequest);
   } catch (e) {
+    if (e instanceof z.ZodError) {
+      return NextResponse.json({ error: "Validation error", details: e.issues }, { status: 400 });
+    }
     const message = e instanceof Error ? e.message : "Erreur inconnue";
     return NextResponse.json({ error: message }, { status: 500 });
   }
