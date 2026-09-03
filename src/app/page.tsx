@@ -4,19 +4,31 @@ import { PUBLIC_TYPES, HEBERGEMENTS, COMMUNES_BRUXELLES } from "@/lib/constants"
 import { Footer } from "@/components/Footer";
 import { Logo } from "@/components/Logo";
 
+export const dynamic = 'force-dynamic';
+
 async function getStats() {
-  const [provinces, cities, secteurs, publics] = await Promise.all([
-    prisma.province.count(),
-    prisma.city.count(),
-    prisma.configItem.count({ where: { category: "SECTOR" } }),
-    prisma.configItem.count({ where: { category: "HEBERGEMENT" } }),
-  ]);
-  return {
-    villes:    provinces || 1,
-    communes:  cities    || 19,
-    secteurs:  secteurs  || Object.keys(PUBLIC_TYPES).length,
-    publics:   publics   || Object.keys(HEBERGEMENTS).length,
-  };
+  try {
+    const [provinces, cities, secteurs, publics] = await Promise.all([
+      prisma.province.count(),
+      prisma.city.count(),
+      prisma.configItem.count({ where: { category: "SECTOR" } }),
+      prisma.configItem.count({ where: { category: "HEBERGEMENT" } }),
+    ]);
+    return {
+      villes:    provinces || 1,
+      communes:  cities    || 19,
+      secteurs:  secteurs  || Object.keys(PUBLIC_TYPES).length,
+      publics:   publics   || Object.keys(HEBERGEMENTS).length,
+    };
+  } catch (error) {
+    // Fallback to defaults if DB unavailable during build
+    return {
+      villes:    1,
+      communes:  19,
+      secteurs:  Object.keys(PUBLIC_TYPES).length,
+      publics:   Object.keys(HEBERGEMENTS).length,
+    };
+  }
 }
 
 export default async function Home() {
