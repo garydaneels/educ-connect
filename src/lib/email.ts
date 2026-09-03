@@ -590,3 +590,42 @@ export async function sendSubscriptionPendingToAdmin(institutionName: string, in
   `;
   await resend.emails.send({ from: FROM, to: ADMIN, subject: `📋 Subscription en attente — ${institutionName}`, html: base(body, "Subscription en attente") });
 }
+
+// ── Formulaire de contact : email à l'admin ────────────────────────────────
+export async function sendContactFormToAdmin(name: string, email: string, subject: string, message: string) {
+  const body = `
+    <p style="margin:0 0 6px;font-size:18px;font-weight:700;color:#1c1917;">📬 Nouveau message de contact</p>
+    <p style="margin:0 0 20px;color:#a8a29e;font-size:14px;">Notification automatique Educ-Connect</p>
+    <div style="background:#f5f5f4;border-radius:12px;padding:16px 20px;font-size:14px;color:#44403c;line-height:2;">
+      <div><strong>Nom :</strong> ${escapeHtml(name)}</div>
+      <div><strong>Email :</strong> ${escapeHtml(email)}</div>
+      <div><strong>Sujet :</strong> ${escapeHtml(subject)}</div>
+      <div><strong>Date :</strong> ${new Date().toLocaleString("fr-BE")}</div>
+    </div>
+    <div style="background:#fff7ed;border-left:3px solid #ea580c;border-radius:0 8px 8px 0;padding:14px 18px;margin:20px 0;color:#92400e;font-size:14px;">
+      <p style="margin:0;font-weight:600;margin-bottom:8px;">Message :</p>
+      <p style="margin:0;white-space:pre-wrap;">${escapeHtml(message)}</p>
+    </div>
+  `;
+  await resend.emails.send({ from: FROM, to: "edu-connect@outlook.be", subject: `📬 Contact — ${subject}`, html: base(body, "Formulaire de contact") });
+}
+
+// ── Formulaire de contact : confirmation à l'utilisateur ────────────────────
+export async function sendContactFormConfirmation(to: string, name: string) {
+  const body = `
+    <p style="margin:0 0 6px;font-size:22px;font-weight:700;color:#1c1917;">Merci pour votre message ! 💬</p>
+    <p style="margin:0 0 20px;color:#a8a29e;font-size:14px;">Bonjour ${escapeHtml(name)}</p>
+    <p style="color:#44403c;font-size:15px;line-height:1.6;">
+      Nous avons bien reçu votre message et le traiterons dans les plus brefs délais. Un membre de l'équipe Educ-Connect vous contactera au plus tôt.
+    </p>
+    <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;padding:16px 20px;margin:20px 0;font-size:14px;color:#0c4a6e;">
+      <p style="margin:0;font-weight:600;">⏱️ Temps de réponse habituel</p>
+      <p style="margin:6px 0 0;">Nous vous répondons généralement dans les 24 à 48 heures.</p>
+    </div>
+    <p style="color:#57534e;font-size:14px;">
+      Si vous n'avez pas de nouvelles dans 3 jours, n'hésitez pas à nous relancer à cette adresse.
+    </p>
+    ${btn(`${BASE}`, "Retour à Educ-Connect →", "#0369a1")}
+  `;
+  await resend.emails.send({ from: FROM, to, subject: "Merci pour votre message — Educ-Connect", html: base(body, "Confirmation de contact") });
+}
