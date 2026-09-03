@@ -16,10 +16,15 @@ const SECTOR_EMOJI: Record<string, string> = {
 };
 
 export default async function InstitutionsAccueilPage() {
-  const dbSectors = await prisma.configItem.findMany({
-    where: { category: "SECTOR" },
-    orderBy: [{ position: "asc" }, { label: "asc" }],
-  });
+  let dbSectors = [];
+  try {
+    dbSectors = await prisma.configItem.findMany({
+      where: { category: "SECTOR" },
+      orderBy: [{ position: "asc" }, { label: "asc" }],
+    });
+  } catch (error) {
+    // Fallback to defaults if DB unavailable during build
+  }
 
   const sectors = dbSectors.length > 0
     ? dbSectors.map(s => ({ emoji: s.emoji ?? SECTOR_EMOJI[s.key] ?? "🏢", label: s.label }))
