@@ -94,7 +94,7 @@ export async function sendWelcomeInstitution(to: string, name: string, instituti
     </p>
     <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:12px;padding:16px 20px;margin:20px 0;">
       <p style="margin:0;font-size:14px;color:#92400e;font-weight:600;">⏳ Prochaine étape</p>
-      <p style="margin:6px 0 0;font-size:14px;color:#78350f;">Souscrivez à un abonnement (149€/an ou 109€ scolaire) pour apparaître dans les recherches des étudiants.</p>
+      <p style="margin:6px 0 0;font-size:14px;color:#78350f;">Souscrivez à un abonnement (180€/an ou 150€ scolaire) pour apparaître dans les recherches des étudiants.</p>
     </div>
     <ul style="color:#57534e;font-size:14px;line-height:2;padding-left:20px;">
       <li>Complétez la fiche de votre institution</li>

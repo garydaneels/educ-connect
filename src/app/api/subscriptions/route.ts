@@ -89,8 +89,8 @@ export async function POST(req: NextRequest) {
     if (institutionWithUser) {
       // Calculer le prix total pour l'email
       const planPrices: Record<string, number> = {
-        ANNUAL: 199.99,
-        SCHOOL: 166.66,
+        ANNUAL: 180,    // Institutions non scolaires: 180€/an = 15€/mois
+        SCHOOL: 150,    // Établissements scolaires: 150€ pour 10 mois
       };
       const basPrice = planPrices[plan] || 0;
       const jobsPrice = (jobsAddonPacks ?? 0) * 50;
