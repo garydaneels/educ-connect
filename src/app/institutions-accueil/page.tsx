@@ -146,7 +146,7 @@ export default async function InstitutionsAccueilPage() {
             <h2 className="text-xl font-medium text-stone-900 mb-3">Votre secteur est le bienvenu</h2>
             <p className="text-sm text-stone-500 mb-8">Educ-Connect référence les institutions de tous les secteurs de l'aide sociale de Belgique francophone.</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
-              {sectors.map((s) => (
+              {sectors.map((s: any) => (
                 <div key={s.label} className="flex items-center gap-3 bg-stone-50 rounded-xl px-4 py-3">
                   <span className="text-xl">{s.emoji}</span>
                   <p className="text-sm font-medium text-stone-900">{s.label}</p>
