@@ -16,7 +16,7 @@ const SECTOR_EMOJI: Record<string, string> = {
 };
 
 export default async function InstitutionsAccueilPage() {
-  let dbSectors = [];
+  let dbSectors: any = [];
   try {
     dbSectors = await prisma.configItem.findMany({
       where: { category: "SECTOR" },
