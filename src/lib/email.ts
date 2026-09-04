@@ -306,7 +306,7 @@ export async function sendStudentStageStatusChanged(to: string, studentName: str
 
 // ── Vérification email ────────────────────────────────────────────────────
 export async function sendEmailVerification(to: string, name: string, token: string) {
-  const link = `${BASE}/verify-email?token=${token}`;
+  const link = `${BASE}/api/auth/verify-email?token=${token}`;
   const body = `
     <p style="margin:0 0 6px;font-size:22px;font-weight:700;color:#1c1917;">Confirmez votre adresse email 📬</p>
     <p style="margin:0 0 20px;color:#a8a29e;font-size:14px;">Bienvenue, ${name} !</p>
