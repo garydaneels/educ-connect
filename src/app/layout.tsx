@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
 import { CookieBanner } from "@/components/CookieBanner";
+import { Analytics } from "@vercel/analytics/react";
 import Script from "next/script";
 
 const ADSENSE_PUB_ID = process.env.NEXT_PUBLIC_ADSENSE_PUB_ID;
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         )}
         <Providers>{children}</Providers>
         <CookieBanner />
+        <Analytics />
       </body>
     </html>
   );
