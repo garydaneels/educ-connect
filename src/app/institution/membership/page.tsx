@@ -227,7 +227,7 @@ function MembershipContent() {
                   </p>
                   <div className="mt-4 bg-stone-50 rounded-xl p-4 space-y-2 text-sm">
                     {[
-                      { label: "Bénéficiaire", value: "Educ-Connect ASBL" },
+                      { label: "Bénéficiaire", value: "Westinser ASBL" },
                       { label: "IBAN",          value: "BE21 3750 0054 5303" },
                       { label: "BIC",           value: "GEBABEBB" },
                       { label: "Montant",       value: `${JOBS_ADDON_PRICE.price},00 €` },
@@ -286,7 +286,7 @@ function MembershipContent() {
           </p>
           <div className="mt-4 bg-white border border-amber-100 rounded-xl p-4 space-y-2 text-sm">
             {[
-              { label: "Bénéficiaire", value: "Educ-Connect ASBL" },
+              { label: "Bénéficiaire", value: "Westinser ASBL" },
               { label: "IBAN",         value: "BE21 3750 0054 5303" },
               { label: "BIC",          value: "GEBABEBB" },
               { label: "Communication", value: refVirement, highlight: true },
@@ -395,7 +395,7 @@ function MembershipContent() {
 
                   <div className="bg-stone-50 border border-stone-200 rounded-xl p-4 space-y-2 text-sm mb-5">
                     {[
-                      { label: "Bénéficiaire", value: "Educ-Connect ASBL" },
+                      { label: "Bénéficiaire", value: "Westinser ASBL" },
                       { label: "IBAN",          value: "BE21 3750 0054 5303" },
                       { label: "BIC / SWIFT",   value: "GEBABEBB" },
                       { label: "Montant",       value: `${Math.round((((jobsAddonPacks * 50) + (jobOffersAddonPacks * 150)) * (exemptFromVAT ? 1 : 1.21)) * 100) / 100},00 €` },
@@ -562,7 +562,7 @@ function MembershipContent() {
                   </p>
                   <div className="space-y-2 mb-5">
                     {[
-                      { label: "Bénéficiaire", value: "Educ-Connect ASBL" },
+                      { label: "Bénéficiaire", value: "Westinser ASBL" },
                       { label: "IBAN",          value: "BE21 3750 0054 5303" },
                       { label: "BIC / SWIFT",   value: "GEBABEBB" },
                       { label: "Montant",       value: selectedPlanData ? `${totalPrice},00 €` : "—" },
