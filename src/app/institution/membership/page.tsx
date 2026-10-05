@@ -228,7 +228,7 @@ function MembershipContent() {
                   <div className="mt-4 bg-stone-50 rounded-xl p-4 space-y-2 text-sm">
                     {[
                       { label: "Bénéficiaire", value: "Educ-Connect ASBL" },
-                      { label: "IBAN",          value: "BE00 0000 0000 0000" },
+                      { label: "IBAN",          value: "BE21 3750 0054 5303" },
                       { label: "BIC",           value: "GEBABEBB" },
                       { label: "Montant",       value: `${JOBS_ADDON_PRICE.price},00 €` },
                       { label: "Communication", value: `${refVirement}-JOBS`, highlight: true },
@@ -287,7 +287,7 @@ function MembershipContent() {
           <div className="mt-4 bg-white border border-amber-100 rounded-xl p-4 space-y-2 text-sm">
             {[
               { label: "Bénéficiaire", value: "Educ-Connect ASBL" },
-              { label: "IBAN",         value: "BE00 0000 0000 0000" },
+              { label: "IBAN",         value: "BE21 3750 0054 5303" },
               { label: "BIC",          value: "GEBABEBB" },
               { label: "Communication", value: refVirement, highlight: true },
             ].map(row => (
@@ -396,7 +396,7 @@ function MembershipContent() {
                   <div className="bg-stone-50 border border-stone-200 rounded-xl p-4 space-y-2 text-sm mb-5">
                     {[
                       { label: "Bénéficiaire", value: "Educ-Connect ASBL" },
-                      { label: "IBAN",          value: "BE00 0000 0000 0000" },
+                      { label: "IBAN",          value: "BE21 3750 0054 5303" },
                       { label: "BIC / SWIFT",   value: "GEBABEBB" },
                       { label: "Montant",       value: `${Math.round((((jobsAddonPacks * 50) + (jobOffersAddonPacks * 150)) * (exemptFromVAT ? 1 : 1.21)) * 100) / 100},00 €` },
                       { label: "Communication", value: `${subscription?.paymentReference || "EDUC-XXXXXXXX"}-ADDON`, highlight: true },
@@ -563,7 +563,7 @@ function MembershipContent() {
                   <div className="space-y-2 mb-5">
                     {[
                       { label: "Bénéficiaire", value: "Educ-Connect ASBL" },
-                      { label: "IBAN",          value: "BE00 0000 0000 0000" },
+                      { label: "IBAN",          value: "BE21 3750 0054 5303" },
                       { label: "BIC / SWIFT",   value: "GEBABEBB" },
                       { label: "Montant",       value: selectedPlanData ? `${totalPrice},00 €` : "—" },
                       { label: "Communication", value: refVirement, highlight: true },
