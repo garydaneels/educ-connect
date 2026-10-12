@@ -611,8 +611,8 @@ export default function InstitutionApplicationsPage() {
                       {app.message && <p className="text-xs text-stone-400 mt-1 italic line-clamp-1">"{app.message}"</p>}
                       <div className="flex gap-2 mt-2">
                         {app.cvPath && <span className="text-xs bg-orange-50 text-orange-600 border border-orange-100 px-2 py-0.5 rounded-md">📄 CV</span>}
-                        {app.letterPath && <span className="text-xs bg-sky-50 text-sky-600 border border-sky-100 px-2 py-0.5 rounded-md">✉️ Lettre</span>}
-                        {app.status === "COMPLETED" && <span className="text-xs bg-sky-50 text-sky-600 border border-sky-100 px-2 py-0.5 rounded-md">🏆 Stage confirmé</span>}
+                        {app.letterPath && <span className="text-xs bg-sky-50 text-sky-600 border border-brand-lavender px-2 py-0.5 rounded-md">✉️ Lettre</span>}
+                        {app.status === "COMPLETED" && <span className="text-xs bg-sky-50 text-sky-600 border border-brand-lavender px-2 py-0.5 rounded-md">🏆 Stage confirmé</span>}
                       </div>
                     </button>
                   );

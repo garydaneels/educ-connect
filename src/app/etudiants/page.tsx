@@ -20,7 +20,7 @@ export default function EtudiantsPage() {
 
       <main className="flex-1">
         {/* Hero */}
-        <section style={{ background: "linear-gradient(160deg, #fff7ed 0%, #fffbeb 100%)" }} className="px-4 sm:px-6 py-10 sm:py-14 border-b border-orange-100">
+        <section style={{ background: "linear-gradient(160deg, #f1e5da 0%, #fff8f1 100%)" }} className="px-4 sm:px-6 py-10 sm:py-14 border-b border-orange-100">
           <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center gap-6 sm:gap-8">
             <div className="flex-1 w-full">
               <div className="inline-block bg-orange-100 text-orange-700 text-xs font-medium px-3 py-1 rounded-full mb-4">
@@ -87,7 +87,7 @@ export default function EtudiantsPage() {
         </section>
 
         {/* Secteurs */}
-        <section className="px-6 py-12 border-b border-stone-100" style={{ background: "#fff7ed" }}>
+        <section className="px-6 py-12 border-b border-stone-100" style={{ background: "#f1e5da" }}>
           <div className="max-w-3xl mx-auto">
             <h2 className="text-xl font-medium text-stone-900 mb-3 text-center">Les secteurs disponibles en Belgique francophone</h2>
             <p className="text-sm text-stone-500 text-center mb-8">Educ-Connect couvre tous les grands secteurs de l'éducation spécialisée.</p>
@@ -105,7 +105,7 @@ export default function EtudiantsPage() {
         </section>
 
         {/* CTA final */}
-        <section className="px-6 py-14 text-center" style={{ background: "linear-gradient(160deg, #fff7ed 0%, #fffbeb 100%)" }}>
+        <section className="px-6 py-14 text-center" style={{ background: "linear-gradient(160deg, #f1e5da 0%, #fff8f1 100%)" }}>
           <div className="max-w-xl mx-auto">
             <div className="text-4xl mb-4">🚀</div>
             <h2 className="text-2xl font-medium text-stone-900 mb-3">Prêt(e) à trouver votre stage ?</h2>

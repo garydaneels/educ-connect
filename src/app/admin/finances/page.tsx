@@ -92,7 +92,7 @@ function BarChart({ data, valueKey, colorClass = "fill-sky-500", height = 160 }:
 }
 
 /* ── Graphique ligne SVG ──────────────────────────────────────────────── */
-function LineChart({ data, valueKey, color = "#0ea5e9" }: {
+function LineChart({ data, valueKey, color = "#374c9c" }: {
   data: MonthData[];
   valueKey: keyof MonthData;
   color?: string;
@@ -142,7 +142,7 @@ function PlanDonut({ monthly, quarterly, semester, annual, school }: { monthly: 
   const r = 36;
   const circ = 2 * Math.PI * r;
   const segments = [
-    { count: monthly,   color: "#38bdf8" }, // sky
+    { count: monthly,   color: "#8fa0d6" }, // sky
     { count: quarterly, color: "#fb923c" }, // orange
     { count: semester,  color: "#818cf8" }, // indigo
     { count: annual,    color: "#a78bfa" }, // violet
@@ -385,7 +385,7 @@ export default function FinancesPage() {
           <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-6">
             <h2 className="font-medium text-stone-900 mb-1">Abonnements actifs par mois</h2>
             <p className="text-xs text-stone-400 mb-4">Nombre d'institutions visibles chaque mois</p>
-            <LineChart data={months} valueKey="activeSubs" color="#0ea5e9" />
+            <LineChart data={months} valueKey="activeSubs" color="#374c9c" />
           </div>
 
           <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-6">

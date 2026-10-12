@@ -628,7 +628,7 @@ export default function StagePage() {
               <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-5">
                 <h2 className="text-base font-medium text-stone-900 mb-4">Récapitulatif</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                  <div className="bg-sky-50 border border-sky-100 rounded-xl p-3 text-center">
+                  <div className="bg-sky-50 border border-brand-lavender rounded-xl p-3 text-center">
                     <p className="text-2xl font-medium text-sky-700">{totalH.toFixed(1)}h</p>
                     <p className="text-xs text-sky-500 mt-0.5">Total planifié</p>
                   </div>

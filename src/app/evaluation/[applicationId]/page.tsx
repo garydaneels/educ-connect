@@ -40,7 +40,7 @@ function StarRating({ value, onChange, label }: { value: number; onChange?: (v: 
 function EvalCard({ eval: e, role }: { eval: Evaluation; role: string }) {
   const isStudent = e.authorRole === "STUDENT";
   return (
-    <div className={`rounded-2xl border p-5 ${isStudent ? "bg-sky-50 border-sky-100" : "bg-orange-50 border-orange-100"}`}>
+    <div className={`rounded-2xl border p-5 ${isStudent ? "bg-sky-50 border-brand-lavender" : "bg-orange-50 border-orange-100"}`}>
       <p className="text-xs font-medium mb-3 text-stone-500">
         {isStudent ? "👤 Évaluation de l'étudiant" : "🏥 Évaluation de l'institution"}
         {e.authorRole === role && " (la vôtre)"}

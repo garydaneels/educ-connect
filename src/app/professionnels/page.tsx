@@ -20,7 +20,7 @@ export default function ProfessionnelsPage() {
 
       <main className="flex-1">
         {/* Hero */}
-        <section style={{ background: "linear-gradient(160deg, #f0fdf4 0%, #fef5e7 100%)" }} className="px-4 sm:px-6 py-10 sm:py-14 border-b border-green-100">
+        <section style={{ background: "linear-gradient(160deg, #f1e5da 0%, #fdcba4 100%)" }} className="px-4 sm:px-6 py-10 sm:py-14 border-b border-green-100">
           <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center gap-6 sm:gap-8">
             <div className="flex-1 w-full">
               <div className="inline-block bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full mb-4">
@@ -87,7 +87,7 @@ export default function ProfessionnelsPage() {
         </section>
 
         {/* Secteurs */}
-        <section className="px-6 py-12 border-b border-stone-100" style={{ background: "#f0fdf4" }}>
+        <section className="px-6 py-12 border-b border-stone-100" style={{ background: "#e3d8e8" }}>
           <div className="max-w-3xl mx-auto">
             <h2 className="text-xl font-medium text-stone-900 mb-3 text-center">Les secteurs qui recrutent</h2>
             <p className="text-sm text-stone-500 text-center mb-8">Trouvez des emplois dans tous les secteurs de l'éducation spécialisée.</p>
@@ -105,7 +105,7 @@ export default function ProfessionnelsPage() {
         </section>
 
         {/* CTA final */}
-        <section className="px-6 py-14 text-center" style={{ background: "linear-gradient(160deg, #f0fdf4 0%, #fef5e7 100%)" }}>
+        <section className="px-6 py-14 text-center" style={{ background: "linear-gradient(160deg, #f1e5da 0%, #fdcba4 100%)" }}>
           <div className="max-w-xl mx-auto">
             <div className="text-4xl mb-4">🚀</div>
             <h2 className="text-2xl font-medium text-stone-900 mb-3">Prêt(e) à trouver votre emploi ?</h2>

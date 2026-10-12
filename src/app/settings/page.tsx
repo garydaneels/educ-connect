@@ -106,7 +106,7 @@ export default function SettingsPage() {
   const prefList = isStudent ? studentPrefs : isInstitution ? institutionPrefs : [];
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: "linear-gradient(135deg, #fff7ed 0%, #f0f9ff 50%, #fef3c7 100%)" }}>
+    <div className="min-h-screen flex flex-col" style={{ background: "linear-gradient(135deg, #f1e5da 0%, #e3d8e8 50%, #fdcba4 100%)" }}>
       <Navbar />
       <main className="flex-1 max-w-2xl mx-auto px-5 py-10 w-full">
         <h1 className="text-2xl font-medium text-stone-900 mb-1">Paramètres du compte</h1>

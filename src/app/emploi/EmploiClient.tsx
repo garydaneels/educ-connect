@@ -316,7 +316,7 @@ export default function EmploiClient({ defaultContractTypes }: { defaultContract
                     📍 {job.institution.commune}
                   </span>
                   {job.schedule && (
-                    <span className="text-xs bg-sky-50 text-sky-700 border border-sky-100 px-2.5 py-1 rounded-full">
+                    <span className="text-xs bg-sky-50 text-sky-700 border border-brand-lavender px-2.5 py-1 rounded-full">
                       🕐 {job.schedule}
                     </span>
                   )}

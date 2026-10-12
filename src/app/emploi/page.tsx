@@ -24,7 +24,7 @@ export default function EmploiPage() {
         </div>
       </header>
 
-      <section style={{ background: "linear-gradient(160deg, #f5f3ff 0%, #ede9fe 100%)" }} className="px-6 py-12 border-b border-violet-100">
+      <section style={{ background: "linear-gradient(160deg, #e3d8e8 0%, #f1e5da 100%)" }} className="px-6 py-12 border-b border-violet-100">
         <div className="max-w-3xl mx-auto text-center">
           <div className="inline-block bg-violet-100 text-violet-700 text-xs font-medium px-3 py-1 rounded-full mb-4">
             Offres d'emploi

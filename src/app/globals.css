@@ -1,5 +1,69 @@
 @import "tailwindcss";
 
+@theme {
+  --color-brand-peach: #fdcba4;
+  --color-brand-coral: #fe8160;
+  --color-brand-cream: #f1e5da;
+  --color-brand-indigo: #374c9c;
+  --color-brand-lavender: #e3d8e8;
+  --color-brand-ink: #1b1f3b;
+
+  --color-orange-50: #fff4ef;
+  --color-orange-100: #ffe4d9;
+  --color-orange-200: #fdcba4;
+  --color-orange-300: #feab93;
+  --color-orange-400: #fe8160;
+  --color-orange-500: #f2663f;
+  --color-orange-600: #d94f2b;
+  --color-orange-700: #b23e20;
+  --color-orange-800: #8c3218;
+  --color-orange-900: #5f220f;
+
+  --color-amber-50: #fff8f1;
+  --color-amber-100: #f1e5da;
+  --color-amber-200: #fdcba4;
+  --color-amber-300: #fdb98f;
+  --color-amber-400: #fe9f74;
+  --color-amber-500: #f2804f;
+  --color-amber-600: #c96236;
+  --color-amber-700: #a24c28;
+  --color-amber-800: #7a3a1e;
+  --color-amber-900: #52280f;
+
+  --color-sky-50: #eef1fa;
+  --color-sky-100: #dde3f4;
+  --color-sky-200: #bcc7e8;
+  --color-sky-300: #8fa0d6;
+  --color-sky-400: #5f76bf;
+  --color-sky-500: #4a61b0;
+  --color-sky-600: #374c9c;
+  --color-sky-700: #2d3e82;
+  --color-sky-800: #222f66;
+  --color-sky-900: #1b1f3b;
+
+  --color-emerald-50: #eef1fa;
+  --color-emerald-100: #dde3f4;
+  --color-emerald-200: #bcc7e8;
+  --color-emerald-300: #8fa0d6;
+  --color-emerald-400: #5f76bf;
+  --color-emerald-500: #4a61b0;
+  --color-emerald-600: #374c9c;
+  --color-emerald-700: #2d3e82;
+  --color-emerald-800: #222f66;
+  --color-emerald-900: #1b1f3b;
+
+  --color-green-50: #eef1fa;
+  --color-green-100: #dde3f4;
+  --color-green-200: #bcc7e8;
+  --color-green-300: #8fa0d6;
+  --color-green-400: #5f76bf;
+  --color-green-500: #4a61b0;
+  --color-green-600: #374c9c;
+  --color-green-700: #2d3e82;
+  --color-green-800: #222f66;
+  --color-green-900: #1b1f3b;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -22,5 +86,5 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-lexend), sans-serif;
 }

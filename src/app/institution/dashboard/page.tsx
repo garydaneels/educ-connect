@@ -65,7 +65,7 @@ export default function InstitutionDashboard() {
   const maxMonthly = stats ? Math.max(...stats.monthly.map(m => m.count), 1) : 1;
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: "linear-gradient(135deg, #fff7ed 0%, #f0f9ff 50%, #fef3c7 100%)" }}>
+    <div className="min-h-screen flex flex-col" style={{ background: "linear-gradient(135deg, #f1e5da 0%, #e3d8e8 50%, #fdcba4 100%)" }}>
       <Navbar />
 
       <main className="flex-1 max-w-6xl mx-auto px-5 py-8 w-full">

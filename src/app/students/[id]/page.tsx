@@ -54,7 +54,7 @@ export default async function StudentPublicProfilePage(
 
   if (!actor?.id || (actor.role !== "INSTITUTION" && actor.role !== "ADMIN")) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: "linear-gradient(135deg, #fff7ed 0%, #f0f9ff 50%, #fef3c7 100%)" }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "linear-gradient(135deg, #f1e5da 0%, #e3d8e8 50%, #fdcba4 100%)" }}>
         <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-10 text-center max-w-sm">
           <p className="text-4xl mb-3">🔒</p>
           <p className="text-stone-900 font-medium mb-1">Accès restreint</p>
@@ -90,7 +90,7 @@ export default async function StudentPublicProfilePage(
   const memberSince = new Date(user.createdAt).toLocaleDateString("fr-BE", { month: "long", year: "numeric" });
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: "linear-gradient(135deg, #fff7ed 0%, #f0f9ff 50%, #fef3c7 100%)" }}>
+    <div className="min-h-screen flex flex-col" style={{ background: "linear-gradient(135deg, #f1e5da 0%, #e3d8e8 50%, #fdcba4 100%)" }}>
       <Navbar />
 
       <main className="flex-1 max-w-4xl mx-auto px-5 py-10 w-full">
@@ -106,7 +106,7 @@ export default async function StudentPublicProfilePage(
               <p className="text-stone-500 text-sm mt-0.5">Membre depuis {memberSince}</p>
               <div className="flex flex-wrap gap-2 mt-3">
                 {profile.studyYear && (
-                  <span className="inline-flex items-center text-xs bg-sky-50 border border-sky-100 text-sky-700 px-2.5 py-1 rounded-full font-medium">
+                  <span className="inline-flex items-center text-xs bg-sky-50 border border-brand-lavender text-sky-700 px-2.5 py-1 rounded-full font-medium">
                     🎓 {(STUDY_YEARS as Record<string, string>)[profile.studyYear] ?? profile.studyYear}
                   </span>
                 )}

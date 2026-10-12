@@ -100,7 +100,7 @@ function ResetPasswordContent() {
 export default function ResetPasswordPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4"
-      style={{ background: "linear-gradient(135deg, #fff7ed 0%, #f0f9ff 50%, #fef3c7 100%)" }}>
+      style={{ background: "linear-gradient(135deg, #f1e5da 0%, #e3d8e8 50%, #fdcba4 100%)" }}>
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/"><Logo /></Link>

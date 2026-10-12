@@ -352,7 +352,7 @@ function MembershipContent() {
                     </div>
                   </div>
                   <p className="text-sm text-stone-600 mb-4 flex-1">Ajoutez des slots pour publier plus d'offres d'emploi.</p>
-                  <div className="flex items-center justify-between pt-4 border-t border-sky-100">
+                  <div className="flex items-center justify-between pt-4 border-t border-brand-lavender">
                     <div className="flex items-center gap-3">
                       <button onClick={() => setJobOffersAddonPacks(Math.max(0, jobOffersAddonPacks - 1))}
                         className="w-10 h-10 rounded-lg bg-sky-100 text-sky-700 hover:bg-sky-200 transition-colors flex items-center justify-center font-bold text-lg">−</button>
@@ -516,7 +516,7 @@ function MembershipContent() {
                       </div>
                     </div>
                     <p className="text-sm text-stone-600 mb-4 flex-1">Publiez des offres d'emploi (CDI, CDD, missions) pour recruter des professionnels.</p>
-                    <div className="flex items-center justify-between pt-4 border-t border-sky-100">
+                    <div className="flex items-center justify-between pt-4 border-t border-brand-lavender">
                       <div className="flex items-center gap-3">
                         <button onClick={() => setJobOffersAddonPacks(Math.max(0, jobOffersAddonPacks - 1))}
                           className="w-10 h-10 rounded-lg bg-sky-100 text-sky-700 hover:bg-sky-200 transition-colors flex items-center justify-center font-bold text-lg">−</button>

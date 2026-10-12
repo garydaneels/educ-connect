@@ -197,7 +197,7 @@ export default function InstitutionStudentsPage() {
 
                     <div className="flex flex-wrap gap-1.5">
                       {s.studyYear && (
-                        <span className="inline-flex items-center text-xs bg-sky-50 border border-sky-100 text-sky-700 px-2.5 py-1 rounded-full font-medium">
+                        <span className="inline-flex items-center text-xs bg-sky-50 border border-brand-lavender text-sky-700 px-2.5 py-1 rounded-full font-medium">
                           🎓 {STUDY_YEARS[s.studyYear] ?? s.studyYear}
                         </span>
                       )}

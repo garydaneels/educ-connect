@@ -84,7 +84,7 @@ export default function StagiairesPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-          <div className="bg-sky-50 border border-sky-100 rounded-2xl p-4">
+          <div className="bg-sky-50 border border-brand-lavender rounded-2xl p-4">
             <p className="text-3xl font-medium text-sky-700">{counts.ONGOING}</p>
             <p className="text-xs text-sky-500 mt-1">Stage en cours</p>
           </div>

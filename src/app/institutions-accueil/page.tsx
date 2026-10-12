@@ -46,7 +46,7 @@ export default async function InstitutionsAccueilPage() {
 
       <main className="flex-1">
         {/* Hero */}
-        <section style={{ background: "linear-gradient(160deg, #e0f2fe 0%, #f0fdf4 100%)" }} className="px-4 sm:px-6 py-10 sm:py-14 border-b border-sky-100">
+        <section style={{ background: "linear-gradient(160deg, #e3d8e8 0%, #f1e5da 100%)" }} className="px-4 sm:px-6 py-10 sm:py-14 border-b border-brand-lavender">
           <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center gap-6 sm:gap-8">
             <div className="flex-1 w-full">
               <div className="inline-block bg-sky-100 text-sky-700 text-xs font-medium px-3 py-1 rounded-full mb-4">
@@ -115,7 +115,7 @@ export default async function InstitutionsAccueilPage() {
         </section>
 
         {/* Processus d'inscription */}
-        <section className="px-6 py-12 border-b border-stone-100" style={{ background: "#f0f9ff" }}>
+        <section className="px-6 py-12 border-b border-stone-100" style={{ background: "#f1e5da" }}>
           <div className="max-w-3xl mx-auto">
             <h2 className="text-xl font-medium text-stone-900 mb-2 text-center">Comment rejoindre Educ-Connect ?</h2>
             <p className="text-sm text-stone-500 text-center mb-10">L'inscription est simple et rapide. Votre fiche est vérifiée avant publication pour garantir la qualité de la plateforme.</p>
@@ -157,7 +157,7 @@ export default async function InstitutionsAccueilPage() {
         </section>
 
         {/* CTA final */}
-        <section className="px-6 py-14 text-center" style={{ background: "linear-gradient(160deg, #e0f2fe 0%, #f0fdf4 100%)" }}>
+        <section className="px-6 py-14 text-center" style={{ background: "linear-gradient(160deg, #e3d8e8 0%, #f1e5da 100%)" }}>
           <div className="max-w-xl mx-auto">
             <div className="text-4xl mb-4">🤝</div>
             <h2 className="text-2xl font-medium text-stone-900 mb-3">Rejoignez Educ-Connect</h2>

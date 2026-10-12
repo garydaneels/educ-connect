@@ -295,7 +295,7 @@ export default function StudentApplicationsPage() {
                     )}
                     <div className="flex gap-2 mt-2 flex-wrap">
                       {app.cvPath && <span className="text-xs bg-orange-50 text-orange-600 border border-orange-100 px-2 py-0.5 rounded-md">📄 CV</span>}
-                      {app.letterPath && <span className="text-xs bg-sky-50 text-sky-600 border border-sky-100 px-2 py-0.5 rounded-md">✉️ Lettre</span>}
+                      {app.letterPath && <span className="text-xs bg-sky-50 text-sky-600 border border-brand-lavender px-2 py-0.5 rounded-md">✉️ Lettre</span>}
                       {app.appointmentDate && !app.stageStatus && <span className="text-xs bg-green-50 text-green-700 border border-green-100 px-2 py-0.5 rounded-md">📅 RDV</span>}
                       {app.stageStatus === "ONGOING" && <span className="text-xs bg-sky-50 text-sky-700 border border-sky-200 px-2 py-0.5 rounded-md font-medium">🎓 Stage en cours</span>}
                     </div>

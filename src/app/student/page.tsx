@@ -404,11 +404,11 @@ export default function StudentPage() {
                 <p style={{ margin: "0 0 2px", fontWeight: 700, fontSize: 14 }}>{i.name}</p>
                 <p style={{ margin: "0 0 6px", color: "#78716c", fontSize: 12 }}>📍 {i.commune}</p>
                 {i.slots.length > 0 && (
-                  <p style={{ margin: "0 0 8px", color: "#ea580c", fontSize: 12 }}>
+                  <p style={{ margin: "0 0 8px", color: "#d94f2b", fontSize: 12 }}>
                     {i.slots.reduce((a, s) => a + s.availablePlaces, 0)} place{i.slots.reduce((a, s) => a + s.availablePlaces, 0) > 1 ? "s" : ""} disponible{i.slots.reduce((a, s) => a + s.availablePlaces, 0) > 1 ? "s" : ""}
                   </p>
                 )}
-                <a href={`/institutions/${i.id}`} style={{ display: "inline-block", background: "#ea580c", color: "#fff", padding: "4px 12px", borderRadius: 8, fontSize: 12, textDecoration: "none", fontWeight: 600 }}>
+                <a href={`/institutions/${i.id}`} style={{ display: "inline-block", background: "#d94f2b", color: "#fff", padding: "4px 12px", borderRadius: 8, fontSize: 12, textDecoration: "none", fontWeight: 600 }}>
                   Voir l&apos;offre →
                 </a>
               </div>
@@ -499,7 +499,7 @@ export default function StudentPage() {
                         </span>
                       ))}
                       {orgs.map(o => (
-                        <span key={o} className="text-xs bg-sky-50 text-sky-700 border border-sky-100 px-2.5 py-1 rounded-full">
+                        <span key={o} className="text-xs bg-sky-50 text-sky-700 border border-brand-lavender px-2.5 py-1 rounded-full">
                           {orgMap[o]?.label ?? ORGANISMES[o] ?? o}
                         </span>
                       ))}

@@ -5,7 +5,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 // Fix icônes Leaflet dans Next.js
-const pinIcon = (color = "#ea580c", boosted = false) => L.divIcon({
+const pinIcon = (color = "#d94f2b", boosted = false) => L.divIcon({
   className: "",
   html: `<div style="
     width:${boosted ? 36 : 30}px;
@@ -68,7 +68,7 @@ export default function MapView({ markers, height = "500px" }: Props) {
           <Marker
             key={m.id}
             position={[m.lat, m.lng]}
-            icon={pinIcon(m.boosted ? "#0369a1" : "#ea580c", m.boosted)}
+            icon={pinIcon(m.boosted ? "#2d3e82" : "#d94f2b", m.boosted)}
           >
             <Popup>
               {m.popupContent}

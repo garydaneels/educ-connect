@@ -317,9 +317,9 @@ export default function StudentJobsPage() {
                 popupContent: (
                   <div style={{ minWidth: 180 }}>
                     <p style={{ margin: "0 0 1px", fontWeight: 700, fontSize: 14 }}>{j.title}</p>
-                    <p style={{ margin: "0 0 4px", color: "#0369a1", fontSize: 12 }}>{j.institution.name}</p>
+                    <p style={{ margin: "0 0 4px", color: "#2d3e82", fontSize: 12 }}>{j.institution.name}</p>
                     <p style={{ margin: "0 0 8px", color: "#78716c", fontSize: 12 }}>📍 {j.institution.commune}</p>
-                    <a href={`/institutions/${j.institution.id}`} style={{ display: "inline-block", background: "#f97316", color: "#fff", padding: "4px 12px", borderRadius: 8, fontSize: 12, textDecoration: "none", fontWeight: 600 }}>
+                    <a href={`/institutions/${j.institution.id}`} style={{ display: "inline-block", background: "#f2663f", color: "#fff", padding: "4px 12px", borderRadius: 8, fontSize: 12, textDecoration: "none", fontWeight: 600 }}>
                       Voir →
                     </a>
                   </div>
@@ -363,7 +363,7 @@ export default function StudentJobsPage() {
                           📍 {job.institution.commune}
                         </span>
                         {job.schedule && (
-                          <span className="text-xs bg-sky-50 text-sky-800 border border-sky-100 px-2.5 py-1 rounded-full">
+                          <span className="text-xs bg-sky-50 text-sky-800 border border-brand-lavender px-2.5 py-1 rounded-full">
                             🕐 {job.schedule}
                           </span>
                         )}

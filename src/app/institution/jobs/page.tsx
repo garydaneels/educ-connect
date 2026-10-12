@@ -279,7 +279,7 @@ export default function InstitutionJobsPage() {
                         {job.description && <p className="text-sm text-stone-500 line-clamp-2 mb-2">{job.description}</p>}
                         <div className="flex flex-wrap gap-2 mb-2">
                           {job.schedule && (
-                            <span className="text-xs bg-sky-50 text-sky-700 border border-sky-100 px-2 py-0.5 rounded-full">🕐 {job.schedule}</span>
+                            <span className="text-xs bg-sky-50 text-sky-700 border border-brand-lavender px-2 py-0.5 rounded-full">🕐 {job.schedule}</span>
                           )}
                           {job.salary && (
                             <span className="text-xs bg-green-50 text-green-700 border border-green-100 px-2 py-0.5 rounded-full">💶 {job.salary}</span>

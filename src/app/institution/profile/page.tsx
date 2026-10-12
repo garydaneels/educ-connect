@@ -467,7 +467,7 @@ function ProfileContent() {
                         <div>
                           <p className="text-xs font-medium text-stone-400 mb-2">Organisme de tutelle</p>
                           <div className="flex flex-wrap gap-1.5">
-                            {orgs.map(o => <span key={o} className="text-xs bg-sky-50 text-sky-700 border border-sky-100 px-2.5 py-1 rounded-full">{(Object.keys(dynamicOrganismes).length > 0 ? dynamicOrganismes : ORGANISMES)[o]}</span>)}
+                            {orgs.map(o => <span key={o} className="text-xs bg-sky-50 text-sky-700 border border-brand-lavender px-2.5 py-1 rounded-full">{(Object.keys(dynamicOrganismes).length > 0 ? dynamicOrganismes : ORGANISMES)[o]}</span>)}
                           </div>
                         </div>
                       )}

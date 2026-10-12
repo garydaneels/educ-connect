@@ -98,7 +98,7 @@ function RegisterForm() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: "linear-gradient(135deg, #fff7ed 0%, #e0f2fe 100%)" }}>
+    <div className="min-h-screen flex flex-col" style={{ background: "linear-gradient(135deg, #f1e5da 0%, #e3d8e8 100%)" }}>
       <header className="bg-white/80 backdrop-blur-sm border-b border-stone-100 px-6 py-4">
         <Link href="/"><Logo /></Link>
       </header>
