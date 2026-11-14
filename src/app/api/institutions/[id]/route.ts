@@ -14,6 +14,14 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   });
 
   if (!institution) return NextResponse.json({ error: "Introuvable" }, { status: 404 });
+
+  if (institution.status !== "ACTIVE") {
+    const session = await getServerSession(authOptions);
+    const viewer = session?.user as { id?: string; role?: string } | undefined;
+    const isOwnerOrAdmin = viewer?.role === "ADMIN" || viewer?.id === institution.userId;
+    if (!isOwnerOrAdmin) return NextResponse.json({ error: "Introuvable" }, { status: 404 });
+  }
+
   return NextResponse.json(institution);
 }
 

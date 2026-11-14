@@ -7,6 +7,7 @@ export function Footer() {
         <p>© {new Date().getFullYear()} Educ-Connect – Plateforme de stages en secteur social en Belgique francophone</p>
         <nav className="flex flex-wrap gap-x-5 gap-y-2 justify-center">
           <Link href="/cgu" className="hover:text-stone-800 transition-colors">Conditions générales</Link>
+          <Link href="/mentions-legales" className="hover:text-stone-800 transition-colors">Mentions légales</Link>
           <Link href="/politique-confidentialite" className="hover:text-stone-800 transition-colors">Politique de confidentialité</Link>
           <Link href="/contact" className="hover:text-stone-800 transition-colors">Contact</Link>
           <a href="mailto:contact@educonnect.be" className="hover:text-stone-800 transition-colors">contact@educonnect.be</a>

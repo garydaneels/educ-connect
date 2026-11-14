@@ -92,7 +92,7 @@ export default function PolitiqueConfidentialitePage() {
             </p>
             <ul className="list-disc pl-5 space-y-1 text-stone-700">
               <li>Les institutions auxquelles vous postulez (nom, profil, CV, lettre de motivation)</li>
-              <li>Des prestataires techniques hébergeant la plateforme (hébergeur VPS), soumis à des obligations de confidentialité</li>
+              <li>Des prestataires techniques (hébergement, base de données, envoi d'emails, suivi des erreurs), soumis à des obligations de confidentialité</li>
             </ul>
           </section>
 
@@ -103,7 +103,10 @@ export default function PolitiqueConfidentialitePage() {
               <li><strong>Cookie de session</strong> : maintient votre connexion (supprimé à la fermeture du navigateur)</li>
               <li><strong>Préférences locales</strong> : bannières ignorées, choix d'affichage (stockés dans votre navigateur uniquement)</li>
             </ul>
-            <p className="mt-2">Aucun cookie publicitaire ni de suivi tiers n'est déposé sans votre consentement.</p>
+            <p className="mt-2">
+              <strong>Google AdSense</strong> (publicité) : ses cookies ne sont déposés qu'après votre acceptation dans la bannière.
+              Refuser ne bloque pas l'accès à la plateforme.
+            </p>
           </section>
 
           <section>

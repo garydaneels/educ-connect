@@ -96,8 +96,8 @@ export default function CGUPage() {
           <section>
             <h2 className="text-lg font-medium text-stone-900 mb-3">8. Droit applicable</h2>
             <p>
-              Les présentes CGU sont soumises au droit belge. En cas de litige, les tribunaux de
-              les tribunaux belges compétents sont seuls compétents.
+              Les présentes CGU sont soumises au droit belge. En cas de litige, les tribunaux belges
+              sont seuls compétents.
             </p>
           </section>
 

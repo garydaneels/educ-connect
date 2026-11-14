@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 const belgiumFrancophoneData: Record<string, { region: string; cities: Array<{ name: string; zipCode?: string }> }> = {
@@ -59,6 +61,10 @@ const belgiumFrancophoneData: Record<string, { region: string; cities: Array<{ n
 };
 
 export async function POST(req: NextRequest) {
+  const session = await getServerSession(authOptions);
+  const user = session?.user as { role?: string } | undefined;
+  if (user?.role !== "ADMIN") return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
+
   try {
     console.log("🌱 Seeding Belgian provinces and cities...");
 

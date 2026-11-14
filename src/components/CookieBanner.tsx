@@ -2,22 +2,18 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-const STORAGE_KEY = "educonnect_cookie_consent";
+import { COOKIE_CONSENT_KEY, COOKIE_CONSENT_EVENT } from "@/lib/cookie-consent";
 
 export function CookieBanner() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (!localStorage.getItem(STORAGE_KEY)) setVisible(true);
+    if (!localStorage.getItem(COOKIE_CONSENT_KEY)) setVisible(true);
   }, []);
 
-  function accept() {
-    localStorage.setItem(STORAGE_KEY, "accepted");
-    setVisible(false);
-  }
-
-  function refuse() {
-    localStorage.setItem(STORAGE_KEY, "refused");
+  function choose(value: "accepted" | "refused") {
+    localStorage.setItem(COOKIE_CONSENT_KEY, value);
+    window.dispatchEvent(new Event(COOKIE_CONSENT_EVENT));
     setVisible(false);
   }
 
@@ -37,13 +33,13 @@ export function CookieBanner() {
         </div>
         <div className="flex gap-2 shrink-0">
           <button
-            onClick={refuse}
+            onClick={() => choose("refused")}
             className="px-4 py-2 rounded-xl text-sm border border-stone-600 hover:bg-stone-800 transition-colors"
           >
             Refuser
           </button>
           <button
-            onClick={accept}
+            onClick={() => choose("accepted")}
             className="px-4 py-2 rounded-xl text-sm bg-orange-500 hover:bg-orange-600 font-medium transition-colors"
           >
             Accepter
